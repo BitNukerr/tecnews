@@ -179,6 +179,14 @@
   padding: 28px;
 }
 
+.admin-view {
+  display: none;
+}
+
+.admin-view.is-active {
+  display: block;
+}
+
 .workspace-header,
 .section-title {
   display: flex;
@@ -221,7 +229,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 0;
 }
 
 .metric-card,
@@ -257,9 +265,52 @@
   padding: 20px;
 }
 
+.admin-view > .admin-section:first-child,
+.admin-section.admin-view {
+  margin-top: 0;
+}
+
+.standalone-panel {
+  max-width: 760px;
+}
+
+.overview-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.overview-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfd;
+  padding: 14px;
+}
+
+.overview-item span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.overview-item strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.5rem;
+}
+
 .post-list {
   display: grid;
   gap: 10px;
+}
+
+.post-list-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+  margin: -4px 0 12px;
 }
 
 .post-item {
@@ -298,6 +349,30 @@
   cursor: pointer;
   font-weight: 850;
   padding: 8px 12px;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.pagination button {
+  min-width: 38px;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.pagination button.is-active {
+  border-color: #111318;
+  background: #111318;
+  color: white;
 }
 
 .status-pill {
@@ -437,6 +512,7 @@
   }
 
   .metric-grid,
+  .overview-list,
   .split-fields,
   .button-row,
   .toggle-row {

@@ -31,11 +31,11 @@
           <span>Tecnews.pt</span>
         </a>
         <nav class="admin-nav" aria-label="Admin">
-          <a href="#overview" class="is-active">Overview</a>
-          <a href="#posts">Posts</a>
-          <a href="#editor">Editor</a>
-          <a href="#homepage">Homepage</a>
-          <a href="#analytics">Analytics</a>
+          <a href="#overview" class="is-active" data-admin-view-link="overview">Overview</a>
+          <a href="#posts" data-admin-view-link="posts">Posts</a>
+          <a href="#editor" data-admin-view-link="editor">Editor</a>
+          <a href="#homepage" data-admin-view-link="homepage">Homepage</a>
+          <a href="#analytics" data-admin-view-link="analytics">Analytics</a>
         </nav>
         <div class="admin-sidebar-actions">
           <a href="index.html">Ver site</a>
@@ -52,26 +52,38 @@
           <button class="reset-button" type="button" data-reset-demo>Repor demo</button>
         </header>
 
-        <section id="overview" class="metric-grid" aria-label="Analítica">
-          <article class="metric-card">
-            <span>Visitas ao site</span>
-            <strong data-metric="pageViews">0</strong>
-          </article>
-          <article class="metric-card">
-            <span>Aberturas do admin</span>
-            <strong data-metric="adminViews">0</strong>
-          </article>
-          <article class="metric-card">
-            <span>Cliques em posts</span>
-            <strong data-metric="postClicks">0</strong>
-          </article>
-          <article class="metric-card">
-            <span>Newsletter</span>
-            <strong data-metric="newsletterSignups">0</strong>
-          </article>
+        <section id="overview" class="admin-view is-active" data-admin-view="overview">
+          <div class="metric-grid" aria-label="Analítica">
+            <article class="metric-card">
+              <span>Visitas ao site</span>
+              <strong data-metric="pageViews">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Aberturas do admin</span>
+              <strong data-metric="adminViews">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Cliques em posts</span>
+              <strong data-metric="postClicks">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Newsletter</span>
+              <strong data-metric="newsletterSignups">0</strong>
+            </article>
+          </div>
+
+          <section class="admin-section">
+            <div class="section-title compact">
+              <div>
+                <p class="eyebrow">Estado</p>
+                <h2>Resumo editorial</h2>
+              </div>
+            </div>
+            <div class="overview-list" data-overview-list></div>
+          </section>
         </section>
 
-        <section class="admin-section" id="posts">
+        <section class="admin-section admin-view" id="posts" data-admin-view="posts">
           <div class="section-title">
             <div>
               <p class="eyebrow">Conteúdo</p>
@@ -80,9 +92,10 @@
             <button class="secondary-button" type="button" data-new-post>Novo post</button>
           </div>
           <div class="post-list" data-post-list></div>
+          <nav class="pagination" data-post-pagination aria-label="Paginação de posts"></nav>
         </section>
 
-        <section class="admin-section" id="editor">
+        <section class="admin-view" id="editor" data-admin-view="editor">
           <form class="editor-grid" data-post-form>
             <input type="hidden" name="id" />
             <div class="editor-main">
@@ -174,8 +187,8 @@
           </form>
         </section>
 
-        <section class="admin-split">
-          <form class="admin-section" id="homepage" data-settings-form>
+        <section class="admin-view" id="homepage" data-admin-view="homepage">
+          <form class="admin-section standalone-panel" data-settings-form>
             <div class="section-title compact">
               <div>
                 <p class="eyebrow">Homepage</p>
@@ -204,17 +217,17 @@
 
             <button type="submit">Guardar homepage</button>
           </form>
+        </section>
 
-          <section class="admin-section" id="analytics">
-            <div class="section-title compact">
-              <div>
-                <p class="eyebrow">Analytics</p>
-                <h2>Posts mais clicados</h2>
-              </div>
+        <section class="admin-section admin-view" id="analytics" data-admin-view="analytics">
+          <div class="section-title compact">
+            <div>
+              <p class="eyebrow">Analytics</p>
+              <h2>Posts mais clicados</h2>
             </div>
-            <div class="bar-list" data-click-chart></div>
-            <p class="muted-small" data-last-visit></p>
-          </section>
+          </div>
+          <div class="bar-list" data-click-chart></div>
+          <p class="muted-small" data-last-visit></p>
         </section>
       </main>
     </div>

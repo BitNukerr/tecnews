@@ -8,6 +8,9 @@ const formTitle = document.querySelector("[data-form-title]");
 const loginScreen = document.querySelector("[data-login-screen]");
 const loginForm = document.querySelector("[data-login-form]");
 const adminApp = document.querySelector("[data-admin-app]");
+const postPagination = document.querySelector("[data-post-pagination]");
+const POSTS_PER_PAGE = 20;
+let currentPostPage = 1;
 
 function adminEscape(value) {
   return String(value || "")
@@ -85,8 +88,64 @@ function saveContent() {
   renderAdmin();
 }
 
+function showAdminView(viewName) {
+  const resolvedView = document.querySelector(`[data-admin-view="${viewName}"]`) ? viewName : "overview";
+
+  document.querySelectorAll("[data-admin-view]").forEach((view) => {
+    view.classList.toggle("is-active", view.dataset.adminView === resolvedView);
+  });
+
+  document.querySelectorAll("[data-admin-view-link]").forEach((link) => {
+    link.classList.toggle("is-active", link.dataset.adminViewLink === resolvedView);
+  });
+
+  if (window.location.hash !== `#${resolvedView}`) {
+    history.replaceState(null, "", `#${resolvedView}`);
+  }
+}
+
+function renderOverview() {
+  const published = content.posts.filter((post) => post.published).length;
+  const drafts = content.posts.length - published;
+  const featured = content.posts.find((post) => post.featured);
+  const latest = content.posts[0];
+
+  document.querySelector("[data-overview-list]").innerHTML = `<article class="overview-item">
+      <span>Total de posts</span>
+      <strong>${content.posts.length}</strong>
+    </article>
+    <article class="overview-item">
+      <span>Publicados</span>
+      <strong>${published}</strong>
+    </article>
+    <article class="overview-item">
+      <span>Rascunhos</span>
+      <strong>${drafts}</strong>
+    </article>
+    <article class="overview-item">
+      <span>Manchete</span>
+      <strong>${adminEscape(featured?.title || "Sem manchete")}</strong>
+    </article>
+    <article class="overview-item">
+      <span>Último post</span>
+      <strong>${adminEscape(latest?.title || "Sem posts")}</strong>
+    </article>
+    <article class="overview-item">
+      <span>Destaques</span>
+      <strong>${content.settings.showTrends ? "Ativos" : "Ocultos"}</strong>
+    </article>`;
+}
+
 function renderPostList() {
-  postList.innerHTML = content.posts
+  const totalPages = Math.max(1, Math.ceil(content.posts.length / POSTS_PER_PAGE));
+  currentPostPage = Math.min(currentPostPage, totalPages);
+  const start = (currentPostPage - 1) * POSTS_PER_PAGE;
+  const pagePosts = content.posts.slice(start, start + POSTS_PER_PAGE);
+
+  postList.innerHTML = `<p class="post-list-meta">A mostrar ${pagePosts.length ? start + 1 : 0}-${Math.min(
+    start + POSTS_PER_PAGE,
+    content.posts.length,
+  )} de ${content.posts.length} posts</p>${pagePosts
     .map(
       (post) => `<article class="post-item">
         <img src="${adminEscape(post.image)}" alt="" />
@@ -98,13 +157,28 @@ function renderPostList() {
         <button type="button" data-edit-post="${adminEscape(post.id)}">Editar</button>
       </article>`,
     )
-    .join("");
+    .join("")}`;
+
+  postPagination.innerHTML =
+    totalPages > 1
+      ? Array.from({ length: totalPages }, (_, index) => {
+          const page = index + 1;
+          return `<button type="button" class="${page === currentPostPage ? "is-active" : ""}" data-post-page="${page}">${page}</button>`;
+        }).join("")
+      : "";
+
+  document.querySelectorAll("[data-post-page]").forEach((button) => {
+    button.addEventListener("click", () => {
+      currentPostPage = Number(button.dataset.postPage);
+      renderPostList();
+    });
+  });
 
   document.querySelectorAll("[data-edit-post]").forEach((button) => {
     button.addEventListener("click", () => {
       const post = content.posts.find((item) => item.id === button.dataset.editPost);
       if (post) fillPostForm(post);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      showAdminView("editor");
     });
   });
 }
@@ -145,6 +219,7 @@ function renderAnalytics() {
 }
 
 function renderAdmin() {
+  renderOverview();
   renderPostList();
   renderSettingsForm();
   renderAnalytics();
@@ -165,6 +240,7 @@ postForm.addEventListener("submit", (event) => {
     content.posts[existingIndex] = post;
   } else {
     content.posts.unshift(post);
+    currentPostPage = 1;
   }
 
   saveContent();
@@ -184,7 +260,10 @@ settingsForm.addEventListener("submit", (event) => {
   saveContent();
 });
 
-document.querySelector("[data-new-post]").addEventListener("click", () => fillPostForm(blankPost()));
+document.querySelector("[data-new-post]").addEventListener("click", () => {
+  fillPostForm(blankPost());
+  showAdminView("editor");
+});
 
 document.querySelector("[data-delete-post]").addEventListener("click", () => {
   const id = postForm.elements.id.value;
@@ -208,10 +287,10 @@ document.querySelector("[data-logout]").addEventListener("click", () => {
   window.location.reload();
 });
 
-document.querySelectorAll(".admin-nav a").forEach((link) => {
-  link.addEventListener("click", () => {
-    document.querySelectorAll(".admin-nav a").forEach((item) => item.classList.remove("is-active"));
-    link.classList.add("is-active");
+document.querySelectorAll("[data-admin-view-link]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showAdminView(link.dataset.adminViewLink);
   });
 });
 
@@ -221,6 +300,7 @@ function unlockAdmin() {
   tecnewsTrackPage("admin");
   fillPostForm(blankPost());
   renderAdmin();
+  showAdminView((window.location.hash || "#overview").replace("#", "") || "overview");
 }
 
 loginForm.addEventListener("submit", (event) => {

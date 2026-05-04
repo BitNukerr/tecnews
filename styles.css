@@ -308,6 +308,14 @@ main {
   font-weight: 800;
 }
 
+.section-heading h2 a {
+  color: inherit;
+}
+
+.section-heading h2 a:hover {
+  color: var(--blue);
+}
+
 .lead-story,
 .story-card,
 .compact-card,
