@@ -69,6 +69,15 @@ function setupSearch(posts) {
   });
 }
 
+function attachCardNavigation() {
+  document.querySelectorAll("[data-card-url]").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return;
+      window.location.href = card.dataset.cardUrl;
+    });
+  });
+}
+
 function renderTopic() {
   const content = tecnewsLoadContent();
   const posts = content.posts.filter((post) => post.published);
@@ -112,7 +121,7 @@ function renderTopic() {
     <div class="topic-results">
       ${remaining
         .map(
-          (post) => `<article class="topic-result-card">
+          (post) => `<article class="topic-result-card clickable-card" data-card-url="${tecnewsPostUrl(post)}">
             <a class="card-image-link" href="${tecnewsPostUrl(post)}">
               <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
             </a>
@@ -129,6 +138,7 @@ function renderTopic() {
   </section>`;
 
   setupSearch(posts);
+  attachCardNavigation();
 }
 
 renderTopic();

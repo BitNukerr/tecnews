@@ -51,6 +51,13 @@ function attachPostTracking() {
   document.querySelectorAll("[data-track]").forEach((item) => {
     item.addEventListener("click", () => tecnewsTrackClick(item.dataset.track));
   });
+
+  document.querySelectorAll("[data-card-url]").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return;
+      window.location.href = card.dataset.cardUrl;
+    });
+  });
 }
 
 function renderSearchResults(posts, query) {
@@ -160,7 +167,7 @@ function renderHome() {
     .filter((post) => post.section === "promocoes")
     .slice(0, 3)
     .map(
-      (post, index) => `<article class="horizontal-card">
+      (post, index) => `<article class="horizontal-card clickable-card" data-card-url="${postUrl(post)}">
         <a class="card-image-link" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
           <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
         </a>
@@ -178,7 +185,7 @@ function renderHome() {
     .filter((post) => post.section === "reviews")
     .slice(0, 3)
     .map(
-      (post) => `<article class="compact-card">
+      (post) => `<article class="compact-card clickable-card" data-card-url="${postUrl(post)}">
         <a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
           <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
         </a>
@@ -197,7 +204,7 @@ function renderHome() {
     .filter((post) => post.price)
     .slice(0, 3)
     .map(
-      (post) => `<article class="deal">
+      (post) => `<article class="deal clickable-card" data-card-url="${postUrl(post)}">
         <div>
           <strong><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></strong>
           <span>${escapeHtml(post.store || post.category)}</span>
