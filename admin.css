@@ -341,6 +341,10 @@
   gap: 10px;
 }
 
+.single-toggle {
+  grid-template-columns: 1fr;
+}
+
 .toggle-row label {
   display: flex;
   align-items: center;

@@ -1,5 +1,9 @@
 const navToggle = document.querySelector(".nav-toggle");
 const mainNav = document.querySelector(".main-nav");
+const searchForm = document.querySelector("[data-search-form]");
+const searchTrigger = document.querySelector("[data-search-trigger]");
+const searchInput = document.querySelector("[data-search-input]");
+const searchResults = document.querySelector("[data-search-results]");
 const tagClasses = ["tag-blue", "tag-green", "tag-red", "tag-yellow", "tag-purple"];
 
 if (navToggle && mainNav) {
@@ -26,7 +30,7 @@ function escapeHtml(value) {
 }
 
 function postUrl(post) {
-  return `#${tecnewsSlugFromTitle(post.title || post.id)}`;
+  return `article.html?id=${encodeURIComponent(post.id)}`;
 }
 
 function tagClass(index) {
@@ -49,6 +53,59 @@ function attachPostTracking() {
   });
 }
 
+function renderSearchResults(posts, query) {
+  if (!searchResults) return;
+  const normalizedQuery = query.trim().toLowerCase();
+
+  if (!normalizedQuery) {
+    searchResults.innerHTML = "";
+    searchResults.classList.remove("is-open");
+    return;
+  }
+
+  const matches = posts
+    .filter((post) => `${post.title} ${post.summary} ${post.category}`.toLowerCase().includes(normalizedQuery))
+    .slice(0, 5);
+
+  searchResults.innerHTML = matches.length
+    ? matches
+        .map(
+          (post) => `<a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+            <span>${escapeHtml(post.category)}</span>
+            <strong>${escapeHtml(post.title)}</strong>
+          </a>`,
+        )
+        .join("")
+    : `<p>Sem resultados para "${escapeHtml(query)}".</p>`;
+  searchResults.classList.add("is-open");
+  attachPostTracking();
+}
+
+function setupSearch(posts) {
+  if (!searchForm || !searchInput || !searchTrigger) return;
+
+  searchTrigger.addEventListener("click", () => {
+    searchForm.classList.add("is-open");
+    searchInput.focus();
+  });
+
+  searchInput.addEventListener("input", () => renderSearchResults(posts, searchInput.value));
+
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    searchForm.classList.add("is-open");
+    searchInput.focus();
+    renderSearchResults(posts, searchInput.value);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!searchForm.contains(event.target) && !searchInput.value.trim()) {
+      searchForm.classList.remove("is-open");
+      searchResults?.classList.remove("is-open");
+    }
+  });
+}
+
 function renderHome() {
   const content = tecnewsLoadContent();
   const posts = content.posts.filter((post) => post.published);
@@ -59,10 +116,16 @@ function renderHome() {
   document.querySelector("[data-newsletter-text]").textContent = content.settings.newsletterText;
 
   const trends = document.querySelector("[data-trends]");
-  trends.innerHTML = `<span>Em destaque</span>${content.settings.trends
-    .filter(Boolean)
-    .map((trend) => `<a href="#" data-track="trend:${escapeHtml(trend)}">${escapeHtml(trend)}</a>`)
-    .join("")}`;
+  if (content.settings.showTrends) {
+    trends.innerHTML = `<span>Em destaque</span>${content.settings.trends
+      .filter(Boolean)
+      .map((trend) => `<a href="index.html?search=${encodeURIComponent(trend)}" data-track="trend:${escapeHtml(trend)}">${escapeHtml(trend)}</a>`)
+      .join("")}`;
+    trends.classList.remove("is-hidden");
+  } else {
+    trends.innerHTML = "";
+    trends.classList.add("is-hidden");
+  }
 
   const lead = document.querySelector("[data-lead-story]");
   lead.innerHTML = leadPost
@@ -98,7 +161,9 @@ function renderHome() {
     .slice(0, 3)
     .map(
       (post, index) => `<article class="horizontal-card">
-        <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
+        <a class="card-image-link" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+          <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
+        </a>
         <div>
           <span class="tag ${tagClass(index + 3)}">${escapeHtml(post.category)}</span>
           <h3><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></h3>
@@ -114,7 +179,9 @@ function renderHome() {
     .slice(0, 3)
     .map(
       (post) => `<article class="compact-card">
-        <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
+        <a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+          <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
+        </a>
         <h3><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></h3>
         ${post.score ? `<span class="score">${escapeHtml(post.score)}</span>` : ""}
       </article>`,
@@ -132,7 +199,7 @@ function renderHome() {
     .map(
       (post) => `<article class="deal">
         <div>
-          <strong>${escapeHtml(post.title)}</strong>
+          <strong><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></strong>
           <span>${escapeHtml(post.store || post.category)}</span>
         </div>
         <p>${escapeHtml(post.price)} ${post.oldPrice ? `<s>${escapeHtml(post.oldPrice)}</s>` : ""}</p>
@@ -140,15 +207,40 @@ function renderHome() {
     )
     .join("");
 
+  document.querySelectorAll("[data-topic-links]").forEach((block) => {
+    const category = block.dataset.topicLinks;
+    const matches = posts
+      .filter((post) => post.category === category || post.section === category.toLowerCase())
+      .slice(0, 3);
+    const fallback = posts.slice(0, 3);
+
+    block.innerHTML = (matches.length ? matches : fallback)
+      .map((post) => `<a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a>`)
+      .join("");
+  });
+
   document.querySelector(".newsletter form")?.addEventListener("submit", (event) => {
     event.preventDefault();
     const analytics = tecnewsLoadAnalytics();
     analytics.newsletterSignups += 1;
     tecnewsSaveAnalytics(analytics);
     event.currentTarget.reset();
+    const button = event.currentTarget.querySelector("button");
+    button.textContent = "Subscrito";
+    window.setTimeout(() => {
+      button.textContent = "Subscrever";
+    }, 2200);
   });
 
   attachPostTracking();
+  setupSearch(posts);
+
+  const initialSearch = new URLSearchParams(window.location.search).get("search");
+  if (initialSearch && searchForm && searchInput) {
+    searchForm.classList.add("is-open");
+    searchInput.value = initialSearch;
+    renderSearchResults(posts, initialSearch);
+  }
 }
 
 tecnewsTrackPage("home");

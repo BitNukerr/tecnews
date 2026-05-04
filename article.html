@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Artigo Tecnews.pt" />
+    <title>Artigo - Tecnews.pt</title>
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="topbar">
+        <a class="brand" href="index.html" aria-label="Tecnews.pt página inicial">
+          <img class="brand-logo" src="assets/logo.svg" alt="Tecnews.pt" />
+        </a>
+
+        <button class="icon-button nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+
+        <nav class="main-nav" aria-label="Secções principais">
+          <a href="index.html#smartphones">Smartphones</a>
+          <a href="index.html#ia">IA</a>
+          <a href="index.html#reviews">Reviews</a>
+          <a href="index.html#gaming">Gaming</a>
+          <a href="index.html#promocoes">Promoções</a>
+          <a href="index.html#guias">Guias</a>
+        </nav>
+
+        <form class="search" role="search" data-search-form>
+          <button class="search-trigger" type="button" aria-label="Abrir pesquisa" data-search-trigger>
+            <i data-lucide="search"></i>
+          </button>
+          <label class="sr-only" for="search-input">Pesquisar</label>
+          <input id="search-input" type="search" placeholder="Pesquisar notícias" data-search-input />
+          <div class="search-results" data-search-results></div>
+        </form>
+      </div>
+    </header>
+
+    <main class="article-page" data-article-root></main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="assets/logo.svg" alt="Tecnews.pt" />
+        </a>
+        <p>Tecnologia explicada de forma simples, útil e independente para leitores em Portugal.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="mailto:editorial@tecnews.pt">Contactos</a>
+        <a href="mailto:parcerias@tecnews.pt">Publicidade</a>
+        <a href="index.html">Início</a>
+      </nav>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="site-data.js"></script>
+    <script src="article.js"></script>
+  </body>
+</html>

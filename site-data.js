@@ -8,6 +8,7 @@ const tecnewsDefaultContent = {
     heroTitle: "A tecnologia que mexe com o teu dia",
     newsletterTitle: "Resumo Tecnews",
     newsletterText: "As novidades úteis de tecnologia, promoções e guias de compra numa newsletter semanal.",
+    showTrends: false,
     trends: ["iPhone 18", "Galaxy S27", "ChatGPT", "Digi Portugal", "Carros elétricos"],
   },
   posts: [

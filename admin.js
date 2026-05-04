@@ -113,6 +113,7 @@ function renderSettingsForm() {
   settingsForm.elements.newsletterTitle.value = content.settings.newsletterTitle;
   settingsForm.elements.newsletterText.value = content.settings.newsletterText;
   settingsForm.elements.trends.value = content.settings.trends.join(", ");
+  settingsForm.elements.showTrends.checked = Boolean(content.settings.showTrends);
 }
 
 function renderAnalytics() {
@@ -174,6 +175,7 @@ settingsForm.addEventListener("submit", (event) => {
   event.preventDefault();
   content.settings.newsletterTitle = settingsForm.elements.newsletterTitle.value.trim();
   content.settings.newsletterText = settingsForm.elements.newsletterText.value.trim();
+  content.settings.showTrends = settingsForm.elements.showTrends.checked;
   content.settings.trends = settingsForm.elements.trends.value
     .split(",")
     .map((trend) => trend.trim())

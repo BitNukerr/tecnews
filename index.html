@@ -16,7 +16,7 @@
   <body>
     <header class="site-header">
       <div class="topbar">
-        <a class="brand" href="#" aria-label="Tecnews.pt página inicial">
+        <a class="brand" href="index.html" aria-label="Tecnews.pt página inicial">
           <img class="brand-logo" src="assets/logo.svg" alt="Tecnews.pt" />
         </a>
 
@@ -33,16 +33,17 @@
           <a href="#guias">Guias</a>
         </nav>
 
-        <form class="search" role="search">
-          <i data-lucide="search"></i>
+        <form class="search" role="search" data-search-form>
+          <button class="search-trigger" type="button" aria-label="Abrir pesquisa" data-search-trigger>
+            <i data-lucide="search"></i>
+          </button>
           <label class="sr-only" for="search-input">Pesquisar</label>
-          <input id="search-input" type="search" placeholder="Pesquisar" />
+          <input id="search-input" type="search" placeholder="Pesquisar notícias" data-search-input />
+          <div class="search-results" data-search-results></div>
         </form>
       </div>
 
-      <div class="trend-strip" data-trends aria-label="Temas em destaque">
-        <span>Em destaque</span>
-      </div>
+      <div class="trend-strip is-hidden" data-trends aria-label="Temas em destaque"></div>
     </header>
 
     <main>
@@ -58,7 +59,7 @@
             <div class="section-heading">
               <p class="eyebrow">Promoções</p>
               <h2>Boas compras sem perder a cabeça</h2>
-              <a href="#">Ver todas</a>
+              <a href="#promocoes">Ver todas</a>
             </div>
 
             <div class="article-list" data-promo-posts></div>
@@ -68,7 +69,7 @@
             <div class="section-heading">
               <p class="eyebrow">Reviews</p>
               <h2>Testado pela equipa Tecnews</h2>
-              <a href="#">Ver reviews</a>
+              <a href="#reviews">Ver reviews</a>
             </div>
 
             <div class="review-grid" data-review-posts></div>
@@ -80,9 +81,7 @@
                 <i data-lucide="smartphone"></i>
                 <h2>Smartphones</h2>
               </div>
-              <a href="#">Como escolher um telemóvel até 300 euros em 2026</a>
-              <a href="#">As marcas que prometem mais anos de atualizações</a>
-              <a href="#">Bateria: os sinais de que está na hora de trocar</a>
+              <div data-topic-links="Smartphones"></div>
             </div>
 
             <div class="topic-block" id="ia">
@@ -90,9 +89,7 @@
                 <i data-lucide="sparkles"></i>
                 <h2>Inteligência Artificial</h2>
               </div>
-              <a href="#">Ferramentas de IA que ajudam mesmo no trabalho</a>
-              <a href="#">O que muda com os novos modelos multimodais</a>
-              <a href="#">Privacidade: cuidados antes de enviar ficheiros</a>
+              <div data-topic-links="IA"></div>
             </div>
 
             <div class="topic-block" id="gaming">
@@ -100,9 +97,7 @@
                 <i data-lucide="gamepad-2"></i>
                 <h2>Gaming</h2>
               </div>
-              <a href="#">Jogos grátis desta semana para PC e consola</a>
-              <a href="#">Monitores 144 Hz: o ponto certo qualidade/preço</a>
-              <a href="#">Cloud gaming em Portugal: vale a pena?</a>
+              <div data-topic-links="Gaming"></div>
             </div>
           </section>
         </div>
@@ -134,16 +129,16 @@
 
     <footer class="site-footer">
       <div>
-        <a class="brand" href="#">
+        <a class="brand" href="index.html">
           <img class="brand-logo" src="assets/logo.svg" alt="Tecnews.pt" />
         </a>
         <p>Tecnologia explicada de forma simples, útil e independente para leitores em Portugal.</p>
       </div>
       <nav aria-label="Rodapé">
-        <a href="#">Sobre</a>
-        <a href="#">Contactos</a>
-        <a href="#">Publicidade</a>
-        <a href="#">Privacidade</a>
+        <a href="mailto:editorial@tecnews.pt">Contactos</a>
+        <a href="mailto:parcerias@tecnews.pt">Publicidade</a>
+        <a href="article.html?id=post-ia-assistentes">Sobre</a>
+        <a href="article.html?id=post-android-compra">Privacidade</a>
       </nav>
     </footer>
 

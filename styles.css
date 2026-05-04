@@ -110,8 +110,10 @@ textarea {
   border-radius: 999px;
   color: #2a3039;
   font-size: 0.88rem;
-  font-weight: 700;
+  font-weight: 950;
+  letter-spacing: 0.03em;
   padding: 9px 13px;
+  text-transform: uppercase;
 }
 
 .main-nav a:hover,
@@ -121,14 +123,26 @@ textarea {
 }
 
 .search {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-self: end;
   min-width: 0;
+  width: 44px;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: white;
-  padding: 9px 12px;
+  padding: 0;
+  transition:
+    width 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.search.is-open,
+.search:focus-within {
+  width: min(270px, 42vw);
+  box-shadow: 0 14px 36px rgba(17, 24, 39, 0.08);
 }
 
 .search svg {
@@ -136,12 +150,74 @@ textarea {
   color: var(--muted);
 }
 
+.search-trigger {
+  display: grid;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
 .search input {
+  display: none;
   min-width: 0;
   width: 100%;
   border: 0;
   outline: 0;
   background: transparent;
+  padding-right: 14px;
+}
+
+.search.is-open input,
+.search:focus-within input {
+  display: block;
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 30;
+  display: none;
+  width: min(360px, 88vw);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.search-results.is-open {
+  display: grid;
+}
+
+.search-results a,
+.search-results p {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 14px;
+}
+
+.search-results a:last-child {
+  border-bottom: 0;
+}
+
+.search-results span {
+  color: var(--blue);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.search-results strong {
+  font-size: 0.92rem;
+  line-height: 1.2;
 }
 
 .icon-button {
@@ -163,6 +239,10 @@ textarea {
   overflow-x: auto;
   padding: 0 0 16px;
   scrollbar-width: none;
+}
+
+.trend-strip.is-hidden {
+  display: none;
 }
 
 .trend-strip::-webkit-scrollbar {
@@ -402,6 +482,11 @@ main {
     transform 0.2s ease;
 }
 
+.card-image-link {
+  display: block;
+  min-height: 156px;
+}
+
 .horizontal-card:hover,
 .compact-card:hover,
 .story-card:hover,
@@ -507,6 +592,10 @@ main {
   color: #2a3039;
   font-weight: 750;
   line-height: 1.25;
+}
+
+.topic-block div[data-topic-links] {
+  display: grid;
 }
 
 .sidebar {
@@ -623,6 +712,100 @@ main {
   filter: brightness(0.96);
 }
 
+.article-page {
+  padding: 34px 0 58px;
+}
+
+.article-shell {
+  width: min(calc(100% - 32px), 900px);
+  margin-inline: auto;
+}
+
+.back-link {
+  display: inline-flex;
+  margin-bottom: 22px;
+  color: var(--blue);
+  font-weight: 900;
+}
+
+.article-header {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.article-header h1 {
+  max-width: 860px;
+  margin: 0;
+  font-size: clamp(2.3rem, 6vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.article-header p {
+  max-width: 720px;
+  margin: 0;
+  color: #3f4652;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+}
+
+.article-figure {
+  margin: 0 0 30px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.article-figure img {
+  aspect-ratio: 16 / 9;
+}
+
+.article-body {
+  display: grid;
+  gap: 20px;
+  max-width: 720px;
+  margin-inline: auto;
+  color: #252b35;
+  font-size: 1.12rem;
+}
+
+.article-body p {
+  margin: 0;
+}
+
+.related-posts {
+  max-width: 720px;
+  margin: 42px auto 0;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+
+.related-posts h2 {
+  margin: 0 0 16px;
+}
+
+.related-posts div {
+  display: grid;
+  gap: 10px;
+}
+
+.related-posts a {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  padding: 14px;
+}
+
+.related-posts span {
+  color: var(--blue);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;
@@ -659,7 +842,7 @@ main {
 
   .main-nav {
     position: absolute;
-    top: 72px;
+    top: 78px;
     left: 16px;
     right: 16px;
     display: none;
@@ -726,6 +909,13 @@ main {
 
   .search {
     grid-column: 1 / -1;
+    justify-self: stretch;
+    width: 44px;
+  }
+
+  .search.is-open,
+  .search:focus-within {
+    width: 100%;
   }
 
   .trend-strip {
