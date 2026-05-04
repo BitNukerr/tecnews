@@ -176,6 +176,7 @@ function renderHome() {
           <h3><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></h3>
           <p>${escapeHtml(post.summary)}</p>
           <span class="byline">${byline(post)}</span>
+          <a class="inline-action" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">Abrir artigo</a>
         </div>
       </article>`,
     )

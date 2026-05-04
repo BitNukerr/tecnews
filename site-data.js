@@ -290,11 +290,11 @@ function tecnewsSlugFromTitle(title) {
 }
 
 function tecnewsPostUrl(post) {
-  return `article.html?id=${encodeURIComponent(post.id)}`;
+  return `article?id=${encodeURIComponent(post.id)}`;
 }
 
 function tecnewsTopicUrl(topic) {
-  return `topic.html?topic=${encodeURIComponent(topic)}`;
+  return `topic?topic=${encodeURIComponent(topic)}`;
 }
 
 function tecnewsTopicForSlug(slug) {
