@@ -510,10 +510,16 @@ main {
 
 .promo-card {
   color: inherit;
+  cursor: pointer;
 }
 
 .promo-card:hover {
   transform: translateY(-1px);
+}
+
+.promo-card:focus-visible {
+  outline: 3px solid rgba(23, 105, 224, 0.24);
+  outline-offset: 3px;
 }
 
 .card-image-link {
@@ -547,6 +553,11 @@ main {
 .horizontal-card p {
   margin: 0 0 12px;
   color: var(--muted);
+}
+
+.promo-card .inline-action {
+  border: 0;
+  cursor: pointer;
 }
 
 .review-grid {
