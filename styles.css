@@ -117,7 +117,8 @@ textarea {
 }
 
 .main-nav a:hover,
-.main-nav a:focus-visible {
+.main-nav a:focus-visible,
+.main-nav a.is-current {
   background: var(--surface-soft);
   color: var(--blue);
 }
@@ -806,6 +807,95 @@ main {
   text-transform: uppercase;
 }
 
+.topic-page {
+  padding: 34px 0 58px;
+}
+
+.topic-shell {
+  width: min(calc(100% - 32px), var(--max));
+  margin-inline: auto;
+}
+
+.topic-hero {
+  display: grid;
+  gap: 10px;
+  max-width: 760px;
+  margin-bottom: 24px;
+}
+
+.topic-hero h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 5.6rem);
+  line-height: 0.96;
+}
+
+.topic-hero p {
+  margin: 0;
+  color: #3f4652;
+  font-size: clamp(1.04rem, 2vw, 1.3rem);
+}
+
+.topic-lead {
+  overflow: hidden;
+  border: 1px solid rgba(209, 217, 226, 0.86);
+  border-radius: 8px;
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.topic-lead a {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+}
+
+.topic-lead img {
+  min-height: 390px;
+}
+
+.topic-lead div {
+  align-self: center;
+  padding: clamp(22px, 4vw, 38px);
+}
+
+.topic-lead h2 {
+  margin: 12px 0 10px;
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+  line-height: 1;
+}
+
+.topic-lead p,
+.topic-result-card p {
+  color: var(--muted);
+}
+
+.topic-results {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.topic-result-card {
+  overflow: hidden;
+  border: 1px solid rgba(209, 217, 226, 0.86);
+  border-radius: 8px;
+  background: white;
+}
+
+.topic-result-card img {
+  height: 180px;
+}
+
+.topic-result-card div {
+  padding: 16px;
+}
+
+.topic-result-card h2 {
+  margin: 10px 0 8px;
+  font-size: 1.18rem;
+  line-height: 1.14;
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;
@@ -859,7 +949,8 @@ main {
   }
 
   .hero-grid,
-  .news-layout {
+  .news-layout,
+  .topic-lead a {
     grid-template-columns: 1fr;
   }
 
@@ -869,7 +960,8 @@ main {
 
   .side-stories,
   .review-grid,
-  .topic-grid {
+  .topic-grid,
+  .topic-results {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -946,6 +1038,7 @@ main {
   .side-stories,
   .review-grid,
   .topic-grid,
+  .topic-results,
   .sidebar {
     grid-template-columns: 1fr;
   }

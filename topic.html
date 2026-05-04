@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Artigo Tecnews.pt" />
-    <title>Artigo - Tecnews.pt</title>
+    <meta name="description" content="Secção Tecnews.pt" />
+    <title>Secção - Tecnews.pt</title>
     <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="preconnect" href="https://unpkg.com" />
     <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
@@ -22,12 +22,12 @@
         </button>
 
         <nav class="main-nav" aria-label="Secções principais">
-          <a href="topic.html?topic=smartphones">Smartphones</a>
-          <a href="topic.html?topic=ia">IA</a>
-          <a href="topic.html?topic=reviews">Reviews</a>
-          <a href="topic.html?topic=gaming">Gaming</a>
-          <a href="topic.html?topic=promocoes">Promoções</a>
-          <a href="topic.html?topic=guias">Guias</a>
+          <a href="topic.html?topic=smartphones" data-topic-nav="smartphones">Smartphones</a>
+          <a href="topic.html?topic=ia" data-topic-nav="ia">IA</a>
+          <a href="topic.html?topic=reviews" data-topic-nav="reviews">Reviews</a>
+          <a href="topic.html?topic=gaming" data-topic-nav="gaming">Gaming</a>
+          <a href="topic.html?topic=promocoes" data-topic-nav="promocoes">Promoções</a>
+          <a href="topic.html?topic=guias" data-topic-nav="guias">Guias</a>
         </nav>
 
         <form class="search" role="search" data-search-form>
@@ -41,7 +41,7 @@
       </div>
     </header>
 
-    <main class="article-page" data-article-root></main>
+    <main class="topic-page" data-topic-root></main>
 
     <footer class="site-footer">
       <div>
@@ -59,6 +59,6 @@
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="site-data.js"></script>
-    <script src="article.js"></script>
+    <script src="topic.js"></script>
   </body>
 </html>

@@ -30,7 +30,7 @@ function escapeHtml(value) {
 }
 
 function postUrl(post) {
-  return `article.html?id=${encodeURIComponent(post.id)}`;
+  return tecnewsPostUrl(post);
 }
 
 function tagClass(index) {
@@ -209,12 +209,10 @@ function renderHome() {
 
   document.querySelectorAll("[data-topic-links]").forEach((block) => {
     const category = block.dataset.topicLinks;
-    const matches = posts
-      .filter((post) => post.category === category || post.section === category.toLowerCase())
-      .slice(0, 3);
-    const fallback = posts.slice(0, 3);
+    const topicSlug = category === "IA" ? "ia" : category.toLowerCase();
+    const matches = tecnewsPostsForTopic(posts, topicSlug).slice(0, 3);
 
-    block.innerHTML = (matches.length ? matches : fallback)
+    block.innerHTML = matches
       .map((post) => `<a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a>`)
       .join("");
   });

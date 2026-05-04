@@ -1,6 +1,38 @@
 const TECNEWS_STORAGE_KEY = "tecnews-content-v1";
 const TECNEWS_ANALYTICS_KEY = "tecnews-analytics-v1";
 const tecnewsMemoryStore = {};
+const tecnewsTopics = {
+  smartphones: {
+    label: "Smartphones",
+    description: "Telemóveis, acessórios, atualizações, operadores e conselhos de compra.",
+    matcher: (post) => post.category === "Smartphones" || /telem[oó]veis?|android|iphone|smartphone/i.test(`${post.title} ${post.summary}`),
+  },
+  ia: {
+    label: "IA",
+    description: "Inteligência artificial aplicada ao trabalho, produtividade, segurança e vida digital.",
+    matcher: (post) => post.category === "IA" || /intelig[eê]ncia artificial|chatgpt|assistentes|modelos/i.test(`${post.title} ${post.summary}`),
+  },
+  reviews: {
+    label: "Reviews",
+    description: "Produtos testados pela equipa Tecnews, com pontos fortes, limites e recomendação prática.",
+    matcher: (post) => post.section === "reviews" || post.category === "Reviews",
+  },
+  gaming: {
+    label: "Gaming",
+    description: "Jogos, consolas, PC gaming, serviços, promoções e novidades para jogadores.",
+    matcher: (post) => post.category === "Gaming" || /playstation|gaming|jogos?|consola|steam|xbox/i.test(`${post.title} ${post.summary}`),
+  },
+  promocoes: {
+    label: "Promoções",
+    description: "Descontos de tecnologia, gadgets, acessórios e bons negócios encontrados pela equipa.",
+    matcher: (post) => post.section === "promocoes" || Boolean(post.price),
+  },
+  guias: {
+    label: "Guias",
+    description: "Guias de compra, explicadores e escolhas simples para decidir melhor.",
+    matcher: (post) => /como|guia|escolher|compra|compensam|vale a pena|preço/i.test(`${post.title} ${post.summary}`),
+  },
+};
 
 const tecnewsDefaultContent = {
   settings: {
@@ -255,4 +287,22 @@ function tecnewsSlugFromTitle(title) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 70);
+}
+
+function tecnewsPostUrl(post) {
+  return `article.html?id=${encodeURIComponent(post.id)}`;
+}
+
+function tecnewsTopicUrl(topic) {
+  return `topic.html?topic=${encodeURIComponent(topic)}`;
+}
+
+function tecnewsTopicForSlug(slug) {
+  return tecnewsTopics[slug] || tecnewsTopics.guias;
+}
+
+function tecnewsPostsForTopic(posts, slug) {
+  const topic = tecnewsTopicForSlug(slug);
+  const matches = posts.filter((post) => topic.matcher(post));
+  return matches.length ? matches : posts;
 }
