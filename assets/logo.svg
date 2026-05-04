@@ -1,14 +1,9 @@
-<svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">Tecnews.pt</title>
-  <desc id="desc">Tecnews.pt wordmark with a signal-shaped TN icon</desc>
-  <rect width="64" height="64" rx="14" fill="#15171C"/>
-  <path d="M16 18H48V26H36V46H28V26H16V18Z" fill="white"/>
-  <path d="M43 34C43 27.925 38.075 23 32 23" stroke="#48D89B" stroke-width="5" stroke-linecap="round"/>
-  <path d="M50 34C50 24.059 41.941 16 32 16" stroke="#1769E0" stroke-width="5" stroke-linecap="round"/>
-  <path d="M80 20H117V27H103V50H94V27H80V20Z" fill="#15171C"/>
-  <path d="M119 31C119 25.925 122.925 22 128.5 22C133.875 22 137.5 25.7 137.5 31.25V50H129.2V33C129.2 30.7 127.95 29.35 125.95 29.35C123.9 29.35 122.35 30.95 122.35 33.35V50H114.05V22.5H121.95L122.2 26.1C123.75 23.55 126.25 22 129.75 22C136.15 22 140.8 26.55 140.8 33.55V50H132.5V34.55C132.5 31.3 130.85 29.35 128.1 29.35C125.25 29.35 123.35 31.55 123.35 34.85V50H119V31Z" fill="#15171C"/>
-  <path d="M145 50V20H167.8V27H153.3V31.65H166.4V38.15H153.3V43H168.3V50H145Z" fill="#15171C"/>
-  <path d="M172 50V22.5H180.1L180.35 26.15C182.1 23.5 184.85 22 188.45 22C195 22 199 26.35 199 33.35V50H190.7V34.2C190.7 31.15 189.15 29.35 186.45 29.35C183.7 29.35 180.3 31.5 180.3 35V50H172Z" fill="#15171C"/>
-  <path d="M203 50V42H211V50H203Z" fill="#1769E0"/>
-  <path d="M216 50V29H209V22.5H216V16H224.3V22.5H233V29H224.3V50H216Z" fill="#15171C"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Tecnews.pt icon</title>
+  <desc id="desc">Minimal Tecnews.pt T icon with two signal lines</desc>
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="white"/>
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="#DCE3EA" stroke-width="2"/>
+  <path d="M15 17.5H49V25.5H36.8V47H27.2V25.5H15V17.5Z" fill="#111318"/>
+  <path d="M43.5 34.5C43.5 28.149 38.351 23 32 23" stroke="#39C98D" stroke-width="5.2" stroke-linecap="round"/>
+  <path d="M51 34.5C51 24.007 42.493 15.5 32 15.5" stroke="#1463D8" stroke-width="5.2" stroke-linecap="round"/>
 </svg>

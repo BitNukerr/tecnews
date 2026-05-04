@@ -9,190 +9,211 @@
     <link rel="stylesheet" href="admin.css" />
   </head>
   <body class="admin-page">
-    <header class="admin-shell-header">
-      <a class="brand" href="index.html" aria-label="Tecnews.pt página inicial">
-        <img class="brand-logo" src="assets/logo.svg" alt="Tecnews.pt" />
-      </a>
-      <nav class="admin-actions" aria-label="Admin">
-        <a href="index.html">Ver site</a>
-        <button type="button" data-reset-demo>Repor demo</button>
-      </nav>
-    </header>
+    <section class="login-screen" data-login-screen>
+      <form class="login-card" data-login-form>
+        <img class="login-logo" src="assets/logo.svg" alt="Tecnews.pt" />
+        <p class="eyebrow">Acesso reservado</p>
+        <h1>Admin Tecnews</h1>
+        <p class="login-copy">Área privada para gerir posts, homepage e métricas editoriais.</p>
+        <label>
+          Password
+          <input name="password" type="password" autocomplete="current-password" required placeholder="Password admin" />
+        </label>
+        <p class="login-error" data-login-error></p>
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
 
-    <main class="admin-shell">
-      <section class="admin-hero">
-        <div>
-          <p class="eyebrow">Painel editorial</p>
-          <h1>Admin Tecnews</h1>
-          <p>Cria posts, escolhe a manchete, edita textos da homepage e acompanha métricas básicas.</p>
+    <div class="admin-app is-locked" data-admin-app>
+      <aside class="admin-sidebar">
+        <a class="admin-brand" href="index.html" aria-label="Tecnews.pt página inicial">
+          <img src="assets/logo.svg" alt="Tecnews.pt" />
+          <span>Tecnews.pt</span>
+        </a>
+        <nav class="admin-nav" aria-label="Admin">
+          <a href="#overview" class="is-active">Overview</a>
+          <a href="#posts">Posts</a>
+          <a href="#editor">Editor</a>
+          <a href="#homepage">Homepage</a>
+          <a href="#analytics">Analytics</a>
+        </nav>
+        <div class="admin-sidebar-actions">
+          <a href="index.html">Ver site</a>
+          <button type="button" data-logout>Terminar sessão</button>
         </div>
-      </section>
+      </aside>
 
-      <section class="metric-grid" aria-label="Analítica">
-        <article class="metric-card">
-          <span>Visitas ao site</span>
-          <strong data-metric="pageViews">0</strong>
-        </article>
-        <article class="metric-card">
-          <span>Aberturas do admin</span>
-          <strong data-metric="adminViews">0</strong>
-        </article>
-        <article class="metric-card">
-          <span>Cliques em posts</span>
-          <strong data-metric="postClicks">0</strong>
-        </article>
-        <article class="metric-card">
-          <span>Newsletter</span>
-          <strong data-metric="newsletterSignups">0</strong>
-        </article>
-      </section>
-
-      <section class="admin-grid">
-        <form class="admin-panel post-editor" data-post-form>
-          <div class="panel-head">
-            <div>
-              <p class="eyebrow">Editor</p>
-              <h2 data-form-title>Novo post</h2>
-            </div>
-            <button class="ghost-button" type="button" data-new-post>Novo</button>
+      <main class="admin-workspace">
+        <header class="workspace-header">
+          <div>
+            <p class="eyebrow">Painel editorial</p>
+            <h1>Controlo do Tecnews</h1>
           </div>
+          <button class="reset-button" type="button" data-reset-demo>Repor demo</button>
+        </header>
 
-          <input type="hidden" name="id" />
+        <section id="overview" class="metric-grid" aria-label="Analítica">
+          <article class="metric-card">
+            <span>Visitas ao site</span>
+            <strong data-metric="pageViews">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Aberturas do admin</span>
+            <strong data-metric="adminViews">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Cliques em posts</span>
+            <strong data-metric="postClicks">0</strong>
+          </article>
+          <article class="metric-card">
+            <span>Newsletter</span>
+            <strong data-metric="newsletterSignups">0</strong>
+          </article>
+        </section>
 
-          <label>
-            Título
-            <input name="title" required maxlength="140" placeholder="Título da notícia" />
-          </label>
-
-          <label>
-            Resumo
-            <textarea name="summary" required rows="3" maxlength="220" placeholder="Resumo curto para a homepage"></textarea>
-          </label>
-
-          <div class="field-row">
-            <label>
-              Categoria
-              <input name="category" required placeholder="IA, Reviews, Gaming..." />
-            </label>
-            <label>
-              Secção
-              <select name="section">
-                <option value="hero">Topo</option>
-                <option value="promocoes">Promoções</option>
-                <option value="reviews">Reviews</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="field-row">
-            <label>
-              Autor
-              <input name="author" required placeholder="Nome do autor" />
-            </label>
-            <label>
-              Data
-              <input name="date" required placeholder="Hoje, 10:00" />
-            </label>
-          </div>
-
-          <label>
-            URL da imagem
-            <input name="image" required placeholder="https://..." />
-          </label>
-
-          <label>
-            Texto alternativo da imagem
-            <input name="imageAlt" placeholder="Descrição da imagem" />
-          </label>
-
-          <div class="field-row">
-            <label>
-              Nota review
-              <input name="score" inputmode="decimal" placeholder="8.6" />
-            </label>
-            <label>
-              Loja
-              <input name="store" placeholder="Amazon" />
-            </label>
-          </div>
-
-          <div class="field-row">
-            <label>
-              Preço
-              <input name="price" placeholder="54,00 €" />
-            </label>
-            <label>
-              Preço antigo
-              <input name="oldPrice" placeholder="69,99 €" />
-            </label>
-          </div>
-
-          <div class="toggle-row">
-            <label><input name="featured" type="checkbox" /> Manchete principal</label>
-            <label><input name="published" type="checkbox" checked /> Publicado</label>
-          </div>
-
-          <div class="button-row">
-            <button type="submit">Guardar post</button>
-            <button class="danger-button" type="button" data-delete-post>Apagar</button>
-          </div>
-        </form>
-
-        <section class="admin-panel">
-          <div class="panel-head">
+        <section class="admin-section" id="posts">
+          <div class="section-title">
             <div>
               <p class="eyebrow">Conteúdo</p>
-              <h2>Posts</h2>
+              <h2>Posts publicados e rascunhos</h2>
             </div>
+            <button class="secondary-button" type="button" data-new-post>Novo post</button>
           </div>
           <div class="post-list" data-post-list></div>
         </section>
-      </section>
 
-      <section class="admin-grid bottom-grid">
-        <form class="admin-panel homepage-editor" data-settings-form>
-          <div class="panel-head">
-            <div>
-              <p class="eyebrow">Homepage</p>
-              <h2>Textos principais</h2>
+        <section class="admin-section" id="editor">
+          <form class="editor-grid" data-post-form>
+            <input type="hidden" name="id" />
+            <div class="editor-main">
+              <div class="section-title compact">
+                <div>
+                  <p class="eyebrow">Editor</p>
+                  <h2 data-form-title>Novo post</h2>
+                </div>
+              </div>
+
+              <label>
+                Título
+                <input name="title" required maxlength="140" placeholder="Título da notícia" />
+              </label>
+
+              <label>
+                Resumo
+                <textarea name="summary" required rows="4" maxlength="220" placeholder="Resumo curto para a homepage"></textarea>
+              </label>
+
+              <label>
+                URL da imagem
+                <input name="image" required placeholder="https://..." />
+              </label>
+
+              <label>
+                Texto alternativo da imagem
+                <input name="imageAlt" placeholder="Descrição da imagem" />
+              </label>
             </div>
-          </div>
 
-          <label>
-            Título da homepage
-            <input name="heroTitle" required />
-          </label>
+            <aside class="editor-side">
+              <label>
+                Categoria
+                <input name="category" required placeholder="IA, Reviews, Gaming..." />
+              </label>
 
-          <label>
-            Título da newsletter
-            <input name="newsletterTitle" required />
-          </label>
+              <label>
+                Secção
+                <select name="section">
+                  <option value="hero">Topo</option>
+                  <option value="promocoes">Promoções</option>
+                  <option value="reviews">Reviews</option>
+                </select>
+              </label>
 
-          <label>
-            Texto da newsletter
-            <textarea name="newsletterText" rows="3" required></textarea>
-          </label>
+              <label>
+                Autor
+                <input name="author" required placeholder="Nome do autor" />
+              </label>
 
-          <label>
-            Temas em destaque
-            <input name="trends" required />
-          </label>
+              <label>
+                Data
+                <input name="date" required placeholder="Hoje, 10:00" />
+              </label>
 
-          <button type="submit">Guardar homepage</button>
-        </form>
+              <div class="split-fields">
+                <label>
+                  Nota
+                  <input name="score" inputmode="decimal" placeholder="8.6" />
+                </label>
+                <label>
+                  Loja
+                  <input name="store" placeholder="Amazon" />
+                </label>
+              </div>
 
-        <section class="admin-panel">
-          <div class="panel-head">
-            <div>
-              <p class="eyebrow">Analytics</p>
-              <h2>Posts mais clicados</h2>
-            </div>
-          </div>
-          <div class="bar-list" data-click-chart></div>
-          <p class="muted-small" data-last-visit></p>
+              <div class="split-fields">
+                <label>
+                  Preço
+                  <input name="price" placeholder="54,00 €" />
+                </label>
+                <label>
+                  Antes
+                  <input name="oldPrice" placeholder="69,99 €" />
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <label><input name="featured" type="checkbox" /> Manchete principal</label>
+                <label><input name="published" type="checkbox" checked /> Publicado</label>
+              </div>
+
+              <div class="button-row">
+                <button type="submit">Guardar</button>
+                <button class="danger-button" type="button" data-delete-post>Apagar</button>
+              </div>
+            </aside>
+          </form>
         </section>
-      </section>
-    </main>
+
+        <section class="admin-split">
+          <form class="admin-section" id="homepage" data-settings-form>
+            <div class="section-title compact">
+              <div>
+                <p class="eyebrow">Homepage</p>
+                <h2>Textos e destaques</h2>
+              </div>
+            </div>
+
+            <label>
+              Título da newsletter
+              <input name="newsletterTitle" required />
+            </label>
+
+            <label>
+              Texto da newsletter
+              <textarea name="newsletterText" rows="4" required></textarea>
+            </label>
+
+            <label>
+              Temas em destaque
+              <input name="trends" required />
+            </label>
+
+            <button type="submit">Guardar homepage</button>
+          </form>
+
+          <section class="admin-section" id="analytics">
+            <div class="section-title compact">
+              <div>
+                <p class="eyebrow">Analytics</p>
+                <h2>Posts mais clicados</h2>
+              </div>
+            </div>
+            <div class="bar-list" data-click-chart></div>
+            <p class="muted-small" data-last-visit></p>
+          </section>
+        </section>
+      </main>
+    </div>
 
     <script src="site-data.js"></script>
     <script src="admin.js"></script>

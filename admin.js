@@ -1,8 +1,13 @@
 const content = tecnewsLoadContent();
+const ADMIN_PASSWORD = "tecnews2026";
+const ADMIN_SESSION_KEY = "tecnews-admin-session-v1";
 const postForm = document.querySelector("[data-post-form]");
 const settingsForm = document.querySelector("[data-settings-form]");
 const postList = document.querySelector("[data-post-list]");
 const formTitle = document.querySelector("[data-form-title]");
+const loginScreen = document.querySelector("[data-login-screen]");
+const loginForm = document.querySelector("[data-login-form]");
+const adminApp = document.querySelector("[data-admin-app]");
 
 function adminEscape(value) {
   return String(value || "")
@@ -87,7 +92,7 @@ function renderPostList() {
         <img src="${adminEscape(post.image)}" alt="" />
         <div>
           <h3>${adminEscape(post.title)}</h3>
-          <p>${adminEscape(post.category)} · ${adminEscape(post.section)} · ${adminEscape(post.author)}</p>
+          <p>${adminEscape(post.category)} / ${adminEscape(post.section)} / ${adminEscape(post.author)}</p>
           <span class="status-pill ${post.published ? "" : "draft"}">${post.published ? "Publicado" : "Rascunho"}</span>
         </div>
         <button type="button" data-edit-post="${adminEscape(post.id)}">Editar</button>
@@ -105,7 +110,6 @@ function renderPostList() {
 }
 
 function renderSettingsForm() {
-  settingsForm.elements.heroTitle.value = content.settings.heroTitle;
   settingsForm.elements.newsletterTitle.value = content.settings.newsletterTitle;
   settingsForm.elements.newsletterText.value = content.settings.newsletterText;
   settingsForm.elements.trends.value = content.settings.trends.join(", ");
@@ -168,7 +172,6 @@ postForm.addEventListener("submit", (event) => {
 
 settingsForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  content.settings.heroTitle = settingsForm.elements.heroTitle.value.trim();
   content.settings.newsletterTitle = settingsForm.elements.newsletterTitle.value.trim();
   content.settings.newsletterText = settingsForm.elements.newsletterText.value.trim();
   content.settings.trends = settingsForm.elements.trends.value
@@ -198,6 +201,39 @@ document.querySelector("[data-reset-demo]").addEventListener("click", () => {
   window.location.reload();
 });
 
-tecnewsTrackPage("admin");
-fillPostForm(blankPost());
-renderAdmin();
+document.querySelector("[data-logout]").addEventListener("click", () => {
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  window.location.reload();
+});
+
+document.querySelectorAll(".admin-nav a").forEach((link) => {
+  link.addEventListener("click", () => {
+    document.querySelectorAll(".admin-nav a").forEach((item) => item.classList.remove("is-active"));
+    link.classList.add("is-active");
+  });
+});
+
+function unlockAdmin() {
+  loginScreen.classList.add("is-hidden");
+  adminApp.classList.remove("is-locked");
+  tecnewsTrackPage("admin");
+  fillPostForm(blankPost());
+  renderAdmin();
+}
+
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const password = loginForm.elements.password.value;
+
+  if (password === ADMIN_PASSWORD) {
+    sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+    unlockAdmin();
+    return;
+  }
+
+  document.querySelector("[data-login-error]").textContent = "Password incorreta.";
+});
+
+if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true") {
+  unlockAdmin();
+}

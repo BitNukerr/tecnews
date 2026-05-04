@@ -15,7 +15,9 @@ Abre `admin.html` para gerir a demo:
 - Atualizar o título da homepage, newsletter e temas em destaque.
 - Ver analítica simples com visitas, cliques em posts e subscrições.
 
-Nesta fase os dados ficam guardados no `localStorage` do navegador. Isto é ótimo para protótipo, mas para um site real com login, vários dispositivos e conteúdo persistente vais precisar de um backend/CMS, por exemplo WordPress, Strapi, Directus, Sanity, Supabase ou Firebase.
+Password da demo: `tecnews2026`.
+
+Nesta fase os dados ficam guardados no `localStorage` do navegador e o login é uma proteção visual de protótipo. Isto é ótimo para testar o fluxo, mas para um site real com login seguro, vários dispositivos e conteúdo persistente vais precisar de um backend/CMS, por exemplo WordPress, Strapi, Directus, Sanity, Supabase ou Firebase.
 
 ## Publicar no GitHub Pages
 

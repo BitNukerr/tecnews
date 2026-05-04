@@ -55,7 +55,6 @@ function renderHome() {
   const heroPosts = posts.filter((post) => post.section === "hero");
   const leadPost = posts.find((post) => post.featured) || heroPosts[0] || posts[0];
 
-  document.querySelector("[data-hero-title]").textContent = content.settings.heroTitle;
   document.querySelector("[data-newsletter-title]").textContent = content.settings.newsletterTitle;
   document.querySelector("[data-newsletter-text]").textContent = content.settings.newsletterText;
 
