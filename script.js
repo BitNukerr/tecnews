@@ -20,6 +20,15 @@ document.querySelectorAll(".main-nav a").forEach((link) => {
   });
 });
 
+document.querySelectorAll("a[href]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const href = link.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("mailto:")) return;
+    event.preventDefault();
+    window.location.href = href;
+  });
+});
+
 function escapeHtml(value) {
   return String(value || "")
     .replaceAll("&", "&amp;")
@@ -42,6 +51,17 @@ function byline(post) {
 }
 
 function attachPostTracking() {
+  document.querySelectorAll("a[href]").forEach((link) => {
+    if (link.dataset.boundNavigation === "true") return;
+    link.dataset.boundNavigation = "true";
+    link.addEventListener("click", (event) => {
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#") || href.startsWith("mailto:")) return;
+      event.preventDefault();
+      window.location.href = href;
+    });
+  });
+
   document.querySelectorAll("[data-track-post]").forEach((link) => {
     link.addEventListener("click", () => {
       tecnewsTrackClick("post", link.dataset.trackPost);
