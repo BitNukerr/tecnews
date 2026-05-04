@@ -508,6 +508,14 @@ main {
     transform 0.2s ease;
 }
 
+.promo-card {
+  color: inherit;
+}
+
+.promo-card:hover {
+  transform: translateY(-1px);
+}
+
 .card-image-link {
   display: block;
   min-height: 156px;

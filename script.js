@@ -187,18 +187,18 @@ function renderHome() {
     .filter((post) => post.section === "promocoes")
     .slice(0, 3)
     .map(
-      (post, index) => `<article class="horizontal-card clickable-card" data-card-url="${postUrl(post)}">
-        <a class="card-image-link" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+      (post, index) => `<a class="horizontal-card promo-card" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+        <span class="card-image-link">
           <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
-        </a>
+        </span>
         <div>
           <span class="tag ${tagClass(index + 3)}">${escapeHtml(post.category)}</span>
-          <h3><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></h3>
+          <h3>${escapeHtml(post.title)}</h3>
           <p>${escapeHtml(post.summary)}</p>
           <span class="byline">${byline(post)}</span>
-          <a class="inline-action" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">Abrir artigo</a>
+          <span class="inline-action">Abrir artigo</span>
         </div>
-      </article>`,
+      </a>`,
     )
     .join("");
 
