@@ -80,11 +80,6 @@ function attachPostTracking() {
   });
 }
 
-function navigateTo(url) {
-  if (!url) return;
-  window.location.assign(url);
-}
-
 function renderSearchResults(posts, query) {
   if (!searchResults) return;
   const normalizedQuery = query.trim().toLowerCase();
@@ -193,8 +188,8 @@ function renderHome() {
     .filter((post) => post.section === "promocoes")
     .slice(0, 3)
     .map(
-      (post, index) => `<article class="horizontal-card promo-card" role="link" tabindex="0" data-promo-url="${postUrl(post)}" data-promo-id="${escapeHtml(post.id)}">
-        <span class="card-image-link" aria-hidden="true">
+      (post, index) => `<a class="horizontal-card promo-card" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+        <span class="card-image-link">
           <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
         </span>
         <div>
@@ -202,29 +197,11 @@ function renderHome() {
           <h3>${escapeHtml(post.title)}</h3>
           <p>${escapeHtml(post.summary)}</p>
           <span class="byline">${byline(post)}</span>
-          <button class="inline-action" type="button" data-promo-button="${postUrl(post)}" data-promo-id="${escapeHtml(post.id)}">Abrir artigo</button>
+          <span class="inline-action">Abrir artigo</span>
         </div>
-      </article>`,
+      </a>`,
     )
     .join("");
-
-  promoList.addEventListener("click", (event) => {
-    const target = event.target.closest("[data-promo-button], [data-promo-url]");
-    if (!target) return;
-    const url = target.dataset.promoButton || target.dataset.promoUrl;
-    const id = target.dataset.promoId || target.closest("[data-promo-id]")?.dataset.promoId;
-    tecnewsTrackClick("post", id);
-    navigateTo(url);
-  });
-
-  promoList.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const card = event.target.closest("[data-promo-url]");
-    if (!card) return;
-    event.preventDefault();
-    tecnewsTrackClick("post", card.dataset.promoId);
-    navigateTo(card.dataset.promoUrl);
-  });
 
   document.querySelector("[data-review-posts]").innerHTML = posts
     .filter((post) => post.section === "reviews")
