@@ -138,6 +138,9 @@ function renderHome() {
   const posts = content.posts.filter((post) => post.published);
   const heroPosts = posts.filter((post) => post.section === "hero");
   const leadPost = posts.find((post) => post.featured) || heroPosts[0] || posts[0];
+  const sideHeroPosts = heroPosts.filter((post) => post.id !== leadPost?.id).slice(0, 2);
+  const usedHeroPostIds = new Set([leadPost, ...sideHeroPosts].filter(Boolean).map((post) => post.id));
+  const feedPosts = posts.filter((post) => !usedHeroPostIds.has(post.id));
 
   document.querySelector("[data-newsletter-title]").textContent = content.settings.newsletterTitle;
   document.querySelector("[data-newsletter-text]").textContent = content.settings.newsletterText;
@@ -168,9 +171,7 @@ function renderHome() {
     : "";
 
   const sideStories = document.querySelector("[data-side-stories]");
-  sideStories.innerHTML = heroPosts
-    .filter((post) => post.id !== leadPost?.id)
-    .slice(0, 2)
+  sideStories.innerHTML = sideHeroPosts
     .map(
       (post, index) => `<article class="story-card">
         <a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
@@ -183,7 +184,7 @@ function renderHome() {
     )
     .join("");
 
-  document.querySelector("[data-main-latest-posts]").innerHTML = posts
+  document.querySelector("[data-main-latest-posts]").innerHTML = feedPosts
     .slice(0, 4)
     .map(
       (post, index) => `<a class="horizontal-card latest-post-card" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
