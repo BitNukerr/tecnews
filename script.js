@@ -183,6 +183,23 @@ function renderHome() {
     )
     .join("");
 
+  document.querySelector("[data-main-latest-posts]").innerHTML = posts
+    .slice(0, 4)
+    .map(
+      (post, index) => `<a class="horizontal-card latest-post-card" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+        <span class="card-image-link">
+          <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
+        </span>
+        <span>
+          <span class="tag ${tagClass(index + 2)}">${escapeHtml(post.category)}</span>
+          <strong>${escapeHtml(post.title)}</strong>
+          <em>${escapeHtml(post.summary)}</em>
+          <span class="byline">${byline(post)}</span>
+        </span>
+      </a>`,
+    )
+    .join("");
+
   document.querySelector("[data-review-posts]").innerHTML = posts
     .filter((post) => post.section === "reviews")
     .slice(0, 3)
@@ -200,6 +217,20 @@ function renderHome() {
   document.querySelector("[data-latest-posts]").innerHTML = posts
     .slice(0, 5)
     .map((post) => `<li><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></li>`)
+    .join("");
+
+  document.querySelector("[data-deal-posts]").innerHTML = posts
+    .filter((post) => post.price)
+    .slice(0, 3)
+    .map(
+      (post) => `<a class="deal" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
+        <span>
+          <strong>${escapeHtml(post.title)}</strong>
+          <small>${escapeHtml(post.store || post.category)}</small>
+        </span>
+        <span>${escapeHtml(post.price)} ${post.oldPrice ? `<s>${escapeHtml(post.oldPrice)}</s>` : ""}</span>
+      </a>`,
+    )
     .join("");
 
   document.querySelectorAll("[data-topic-links]").forEach((block) => {
