@@ -274,6 +274,86 @@
   max-width: 760px;
 }
 
+.homepage-order-panel {
+  margin-bottom: 18px;
+}
+
+.homepage-layout-preview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.homepage-preview-block {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfd;
+  padding: 14px;
+}
+
+.homepage-preview-block h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.homepage-preview-row {
+  display: grid;
+  grid-template-columns: 28px 58px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.homepage-preview-row > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 999px;
+  background: #111318;
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.homepage-preview-row img {
+  width: 58px;
+  height: 44px;
+  border-radius: 6px;
+}
+
+.homepage-preview-row strong,
+.homepage-preview-row small {
+  display: block;
+}
+
+.homepage-preview-row strong {
+  overflow: hidden;
+  font-size: 0.88rem;
+  line-height: 1.18;
+  text-overflow: ellipsis;
+}
+
+.homepage-preview-row small {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.homepage-preview-row button {
+  grid-column: 2 / -1;
+  width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-weight: 850;
+  padding: 7px 11px;
+}
+
 .overview-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -485,6 +565,7 @@
 @media (max-width: 1060px) {
   .admin-app,
   .editor-grid,
+  .homepage-layout-preview,
   .admin-split {
     grid-template-columns: 1fr;
   }

@@ -9,6 +9,7 @@ const loginScreen = document.querySelector("[data-login-screen]");
 const loginForm = document.querySelector("[data-login-form]");
 const adminApp = document.querySelector("[data-admin-app]");
 const postPagination = document.querySelector("[data-post-pagination]");
+const homepageLayout = document.querySelector("[data-homepage-layout]");
 const POSTS_PER_PAGE = 20;
 let currentPostPage = 1;
 
@@ -19,6 +20,14 @@ function adminEscape(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function sectionLabel(section) {
+  return {
+    hero: "Topo",
+    promocoes: "Feed principal",
+    reviews: "Reviews",
+  }[section] || section;
 }
 
 function blankPost() {
@@ -88,6 +97,22 @@ function saveContent() {
   renderAdmin();
 }
 
+function getHomepageLayout() {
+  const publishedPosts = content.posts.filter((post) => post.published);
+  const heroPosts = publishedPosts.filter((post) => post.section === "hero");
+  const leadPost = publishedPosts.find((post) => post.featured) || heroPosts[0] || publishedPosts[0];
+  const sideHeroPosts = heroPosts.filter((post) => post.id !== leadPost?.id).slice(0, 2);
+  const usedHeroPostIds = new Set([leadPost, ...sideHeroPosts].filter(Boolean).map((post) => post.id));
+  const feedPosts = publishedPosts.filter((post) => !usedHeroPostIds.has(post.id));
+  const dealPosts = publishedPosts.filter((post) => post.price).slice(0, 3);
+
+  return {
+    hero: [leadPost, ...sideHeroPosts].filter(Boolean),
+    feed: feedPosts.slice(0, 8),
+    deals: dealPosts,
+  };
+}
+
 function showAdminView(viewName) {
   const resolvedView = document.querySelector(`[data-admin-view="${viewName}"]`) ? viewName : "overview";
 
@@ -151,7 +176,7 @@ function renderPostList() {
         <img src="${adminEscape(post.image)}" alt="" />
         <div>
           <h3>${adminEscape(post.title)}</h3>
-          <p>${adminEscape(post.category)} / ${adminEscape(post.section)} / ${adminEscape(post.author)}</p>
+          <p>${adminEscape(post.category)} / ${adminEscape(sectionLabel(post.section))} / ${adminEscape(post.author)}</p>
           <span class="status-pill ${post.published ? "" : "draft"}">${post.published ? "Publicado" : "Rascunho"}</span>
         </div>
         <button type="button" data-edit-post="${adminEscape(post.id)}">Editar</button>
@@ -190,6 +215,47 @@ function renderSettingsForm() {
   settingsForm.elements.showTrends.checked = Boolean(content.settings.showTrends);
 }
 
+function renderHomepageLayout() {
+  const layout = getHomepageLayout();
+  const renderRows = (posts, emptyText, startAt = 1) =>
+    posts.length
+      ? posts
+          .map(
+            (post, index) => `<article class="homepage-preview-row">
+              <span>${startAt + index}</span>
+              <img src="${adminEscape(post.image)}" alt="" />
+              <div>
+                <strong>${adminEscape(post.title)}</strong>
+                <small>${adminEscape(post.category)} / ${adminEscape(post.date)}</small>
+              </div>
+              <button type="button" data-edit-post="${adminEscape(post.id)}">Editar</button>
+            </article>`,
+          )
+          .join("")
+      : `<p class="muted-small">${emptyText}</p>`;
+
+  homepageLayout.innerHTML = `<div class="homepage-preview-block">
+      <h3>3 caixas grandes</h3>
+      ${renderRows(layout.hero, "Ainda não há posts publicados para o topo.")}
+    </div>
+    <div class="homepage-preview-block">
+      <h3>Continuação dos posts</h3>
+      ${renderRows(layout.feed, "A continuação aparece quando existirem mais posts publicados.", 4)}
+    </div>
+    <div class="homepage-preview-block">
+      <h3>Sidebar de promoções</h3>
+      ${renderRows(layout.deals, "Adiciona preço a um post para aparecer na sidebar de promoções.")}
+    </div>`;
+
+  homepageLayout.querySelectorAll("[data-edit-post]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const post = content.posts.find((item) => item.id === button.dataset.editPost);
+      if (post) fillPostForm(post);
+      showAdminView("editor");
+    });
+  });
+}
+
 function renderAnalytics() {
   const analytics = tecnewsLoadAnalytics();
   const postClickTotal = Object.values(analytics.postClicks).reduce((sum, value) => sum + value, 0);
@@ -222,6 +288,7 @@ function renderAdmin() {
   renderOverview();
   renderPostList();
   renderSettingsForm();
+  renderHomepageLayout();
   renderAnalytics();
 }
 
