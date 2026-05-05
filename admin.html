@@ -38,6 +38,7 @@
           <a href="#overview" class="is-active" data-admin-view-link="overview">Overview</a>
           <a href="#posts" data-admin-view-link="posts">Posts</a>
           <a href="#editor" data-admin-view-link="editor">Editor</a>
+          <a href="#editorial" data-admin-view-link="editorial">Editorial</a>
           <a href="#homepage" data-admin-view-link="homepage">Homepage</a>
           <a href="#analytics" data-admin-view-link="analytics">Analytics</a>
         </nav>
@@ -126,7 +127,7 @@
               </label>
 
               <label>
-                URL da imagem
+                Imagem principal
                 <input name="image" required placeholder="https://..." />
               </label>
 
@@ -134,12 +135,17 @@
                 Texto alternativo da imagem
                 <input name="imageAlt" placeholder="Descrição da imagem" />
               </label>
+
+              <label>
+                Imagens adicionais
+                <textarea name="galleryImages" rows="5" placeholder="Um URL por linha para galeria no artigo"></textarea>
+              </label>
             </div>
 
             <aside class="editor-side">
               <label>
                 Categoria
-                <input name="category" required placeholder="IA, Reviews, Gaming..." />
+                <select name="category" required data-category-select></select>
               </label>
 
               <label>
@@ -153,13 +159,10 @@
 
               <label>
                 Autor
-                <input name="author" required placeholder="Nome do autor" />
+                <select name="author" required data-author-select></select>
               </label>
 
-              <label>
-                Data
-                <input name="date" required placeholder="Hoje, 10:00" />
-              </label>
+              <p class="editor-note">A data é criada automaticamente quando publicas ou guardas um novo post.</p>
 
               <div class="split-fields">
                 <label>
@@ -193,6 +196,29 @@
                 <button class="danger-button" type="button" data-delete-post>Apagar</button>
               </div>
             </aside>
+          </form>
+        </section>
+
+        <section class="admin-view" id="editorial" data-admin-view="editorial">
+          <form class="admin-section standalone-panel" data-taxonomy-form>
+            <div class="section-title compact">
+              <div>
+                <p class="eyebrow">Editorial</p>
+                <h2>Categorias e autores</h2>
+              </div>
+            </div>
+
+            <label>
+              Categorias
+              <textarea name="categories" rows="7" required placeholder="Uma categoria por linha"></textarea>
+            </label>
+
+            <label>
+              Autores
+              <textarea name="authors" rows="7" required placeholder="Um nome por linha"></textarea>
+            </label>
+
+            <button type="submit">Guardar editorial</button>
           </form>
         </section>
 

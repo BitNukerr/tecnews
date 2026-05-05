@@ -3,6 +3,7 @@ const ADMIN_PASSWORD = "tecnews2026";
 const ADMIN_SESSION_KEY = "tecnews-admin-session-v1";
 const postForm = document.querySelector("[data-post-form]");
 const settingsForm = document.querySelector("[data-settings-form]");
+const taxonomyForm = document.querySelector("[data-taxonomy-form]");
 const postList = document.querySelector("[data-post-list]");
 const formTitle = document.querySelector("[data-form-title]");
 const loginScreen = document.querySelector("[data-login-screen]");
@@ -30,16 +31,43 @@ function sectionLabel(section) {
   }[section] || section;
 }
 
+function listFromSettings(name, fallback = []) {
+  const value = content.settings[name];
+  return Array.isArray(value) && value.length ? value : fallback;
+}
+
+function linesFromText(value) {
+  return value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function currentDateLabel() {
+  return new Date().toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" });
+}
+
+function renderSelectOptions(select, values, selectedValue) {
+  select.innerHTML = values.map((value) => `<option value="${adminEscape(value)}">${adminEscape(value)}</option>`).join("");
+  if (selectedValue && !values.includes(selectedValue)) {
+    select.insertAdjacentHTML("afterbegin", `<option value="${adminEscape(selectedValue)}">${adminEscape(selectedValue)}</option>`);
+  }
+  select.value = selectedValue || values[0] || "";
+}
+
 function blankPost() {
+  const categories = listFromSettings("categories", ["IA"]);
+  const authors = listFromSettings("authors", ["Tecnews"]);
   return {
     id: "",
     title: "",
     summary: "",
-    category: "",
-    author: "",
-    date: "Hoje",
+    category: categories[0] || "",
+    author: authors[0] || "",
+    date: currentDateLabel(),
     image: "",
     imageAlt: "",
+    galleryImages: [],
     section: "hero",
     score: "",
     store: "",
@@ -51,15 +79,16 @@ function blankPost() {
 }
 
 function fillPostForm(post) {
+  renderEditorOptions(post);
   postForm.elements.id.value = post.id;
   postForm.elements.title.value = post.title;
   postForm.elements.summary.value = post.summary;
   postForm.elements.body.value = post.body || "";
   postForm.elements.category.value = post.category;
   postForm.elements.author.value = post.author;
-  postForm.elements.date.value = post.date;
   postForm.elements.image.value = post.image;
   postForm.elements.imageAlt.value = post.imageAlt;
+  postForm.elements.galleryImages.value = (post.galleryImages || []).join("\n");
   postForm.elements.section.value = post.section;
   postForm.elements.score.value = post.score;
   postForm.elements.store.value = post.store;
@@ -73,6 +102,7 @@ function fillPostForm(post) {
 function readPostForm() {
   const title = postForm.elements.title.value.trim();
   const existingId = postForm.elements.id.value;
+  const existingPost = content.posts.find((post) => post.id === existingId);
 
   return {
     id: existingId || `post-${Date.now()}-${tecnewsSlugFromTitle(title)}`,
@@ -81,9 +111,10 @@ function readPostForm() {
     body: postForm.elements.body.value.trim(),
     category: postForm.elements.category.value.trim(),
     author: postForm.elements.author.value.trim(),
-    date: postForm.elements.date.value.trim(),
+    date: existingPost?.date || currentDateLabel(),
     image: postForm.elements.image.value.trim(),
     imageAlt: postForm.elements.imageAlt.value.trim(),
+    galleryImages: linesFromText(postForm.elements.galleryImages.value),
     section: postForm.elements.section.value,
     score: postForm.elements.score.value.trim(),
     store: postForm.elements.store.value.trim(),
@@ -91,7 +122,7 @@ function readPostForm() {
     oldPrice: postForm.elements.oldPrice.value.trim(),
     featured: postForm.elements.featured.checked,
     published: postForm.elements.published.checked,
-    sortOrder: content.posts.find((post) => post.id === existingId)?.sortOrder,
+    sortOrder: existingPost?.sortOrder,
   };
 }
 
@@ -221,6 +252,16 @@ function renderSettingsForm() {
   settingsForm.elements.showTrends.checked = Boolean(content.settings.showTrends);
 }
 
+function renderTaxonomyForm() {
+  taxonomyForm.elements.categories.value = listFromSettings("categories").join("\n");
+  taxonomyForm.elements.authors.value = listFromSettings("authors").join("\n");
+}
+
+function renderEditorOptions(post = {}) {
+  renderSelectOptions(postForm.elements.category, listFromSettings("categories", ["IA"]), post.category);
+  renderSelectOptions(postForm.elements.author, listFromSettings("authors", ["Tecnews"]), post.author);
+}
+
 function renderHomepageLayout() {
   const layout = getHomepageLayout();
   const renderRows = (posts, emptyText, startAt = 1) =>
@@ -294,6 +335,8 @@ function renderAdmin() {
   renderOverview();
   renderPostList();
   renderSettingsForm();
+  renderTaxonomyForm();
+  renderEditorOptions(readPostForm());
   renderHomepageLayout();
   renderAnalytics();
 }
@@ -345,6 +388,20 @@ settingsForm.addEventListener("submit", async (event) => {
     saveContent();
   } catch (error) {
     alert(`Nao foi possivel guardar a homepage: ${error.message}`);
+  }
+});
+
+taxonomyForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  content.settings.categories = linesFromText(taxonomyForm.elements.categories.value);
+  content.settings.authors = linesFromText(taxonomyForm.elements.authors.value);
+
+  try {
+    await tecnewsSaveSettingsAsync(content.settings);
+    await refreshContent();
+    saveContent();
+  } catch (error) {
+    alert(`Nao foi possivel guardar o painel editorial: ${error.message}`);
   }
 });
 

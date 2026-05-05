@@ -14,6 +14,7 @@ create table if not exists public.posts (
   published_at_text text not null,
   image_url text not null,
   image_alt text not null default '',
+  gallery_images jsonb not null default '[]'::jsonb,
   section text not null default 'promocoes',
   score text not null default '',
   store text not null default '',
@@ -69,7 +70,11 @@ values (
     "newsletterTitle": "Resumo Tecnews",
     "newsletterText": "As novidades úteis de tecnologia, promoções e guias de compra numa newsletter semanal.",
     "showTrends": false,
-    "trends": ["iPhone 18", "Galaxy S27", "ChatGPT", "Digi Portugal", "Carros elétricos"]
+    "trends": ["iPhone 18", "Galaxy S27", "ChatGPT", "Digi Portugal", "Carros elétricos"],
+    "categories": ["IA", "Smartphones", "Gaming", "Oferta", "Portáteis", "Reviews", "Guias", "Promoções"],
+    "authors": ["Rafael Matos", "Mariana Lopes", "Diogo Reis", "Inês Gomes", "João Esteves"]
   }'::jsonb
 )
 on conflict (key) do nothing;
+
+alter table public.posts add column if not exists gallery_images jsonb not null default '[]'::jsonb;

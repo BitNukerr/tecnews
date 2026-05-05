@@ -488,6 +488,17 @@
   align-content: start;
 }
 
+.editor-note {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfd;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 750;
+  padding: 11px 12px;
+}
+
 .split-fields,
 .button-row,
 .toggle-row {
@@ -576,7 +587,7 @@
   }
 
   .admin-nav {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     overflow-x: auto;
   }
 }

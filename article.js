@@ -122,6 +122,7 @@ async function renderArticle() {
   const postIndex = posts.findIndex((item) => item.id === post.id);
   const articleParagraphs = paragraphsFor(post);
   const readingTime = readingTimeFor(post, articleParagraphs);
+  const galleryImages = (post.galleryImages || []).filter(Boolean);
   const related = posts
     .filter((item) => item.id !== post.id && item.category === post.category)
     .concat(posts.filter((item) => item.id !== post.id && item.category !== post.category))
@@ -146,6 +147,15 @@ async function renderArticle() {
       <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
       ${post.imageAlt ? `<figcaption>${escapeHtml(post.imageAlt)}</figcaption>` : ""}
     </figure>
+    ${
+      galleryImages.length
+        ? `<div class="article-gallery">
+            ${galleryImages
+              .map((image, index) => `<img src="${escapeHtml(image)}" alt="${escapeHtml(`${post.title} imagem ${index + 2}`)}" />`)
+              .join("")}
+          </div>`
+        : ""
+    }
     <div class="article-reading-layout">
       <aside class="article-tools" aria-label="Ferramentas do artigo">
         <button type="button" data-share-article><i data-lucide="share-2"></i><span>Partilhar</span></button>

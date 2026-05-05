@@ -879,6 +879,18 @@ main {
   padding: 10px 14px 12px;
 }
 
+.article-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: -12px 0 30px;
+}
+
+.article-gallery img {
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+}
+
 .article-reading-layout {
   display: grid;
   grid-template-columns: 160px minmax(0, 720px) 160px;
@@ -1196,6 +1208,10 @@ main {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .article-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .newsletter {
     grid-column: 1 / -1;
   }
@@ -1358,6 +1374,12 @@ main {
   }
 
   .article-figure {
+    margin-bottom: 22px;
+  }
+
+  .article-gallery {
+    grid-template-columns: 1fr;
+    margin-top: -8px;
     margin-bottom: 22px;
   }
 

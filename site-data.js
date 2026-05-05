@@ -42,6 +42,8 @@ const tecnewsDefaultContent = {
     newsletterText: "As novidades úteis de tecnologia, promoções e guias de compra numa newsletter semanal.",
     showTrends: false,
     trends: ["iPhone 18", "Galaxy S27", "ChatGPT", "Digi Portugal", "Carros elétricos"],
+    categories: ["IA", "Smartphones", "Gaming", "Oferta", "Portáteis", "Reviews", "Guias", "Promoções"],
+    authors: ["Rafael Matos", "Mariana Lopes", "Diogo Reis", "Inês Gomes", "João Esteves"],
   },
   posts: [
     {
@@ -203,6 +205,7 @@ function tecnewsNormalizePost(post, index = 0) {
     store: "",
     price: "",
     oldPrice: "",
+    galleryImages: Array.isArray(post.galleryImages) ? post.galleryImages : [],
     featured: false,
     published: true,
     sortOrder: index * 10,
