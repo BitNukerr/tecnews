@@ -183,26 +183,6 @@ function renderHome() {
     )
     .join("");
 
-  const promoList = document.querySelector("[data-promo-posts]");
-  promoList.innerHTML = posts
-    .filter((post) => post.section === "promocoes")
-    .slice(0, 3)
-    .map(
-      (post, index) => `<a class="horizontal-card promo-card" href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">
-        <span class="card-image-link">
-          <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
-        </span>
-        <div>
-          <span class="tag ${tagClass(index + 3)}">${escapeHtml(post.category)}</span>
-          <h3>${escapeHtml(post.title)}</h3>
-          <p>${escapeHtml(post.summary)}</p>
-          <span class="byline">${byline(post)}</span>
-          <span class="inline-action">Abrir artigo</span>
-        </div>
-      </a>`,
-    )
-    .join("");
-
   document.querySelector("[data-review-posts]").innerHTML = posts
     .filter((post) => post.section === "reviews")
     .slice(0, 3)
@@ -220,20 +200,6 @@ function renderHome() {
   document.querySelector("[data-latest-posts]").innerHTML = posts
     .slice(0, 5)
     .map((post) => `<li><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></li>`)
-    .join("");
-
-  document.querySelector("[data-deal-posts]").innerHTML = posts
-    .filter((post) => post.price)
-    .slice(0, 3)
-    .map(
-      (post) => `<article class="deal clickable-card" data-card-url="${postUrl(post)}">
-        <div>
-          <strong><a href="${postUrl(post)}" data-track-post="${escapeHtml(post.id)}">${escapeHtml(post.title)}</a></strong>
-          <span>${escapeHtml(post.store || post.category)}</span>
-        </div>
-        <p>${escapeHtml(post.price)} ${post.oldPrice ? `<s>${escapeHtml(post.oldPrice)}</s>` : ""}</p>
-      </article>`,
-    )
     .join("");
 
   document.querySelectorAll("[data-topic-links]").forEach((block) => {
