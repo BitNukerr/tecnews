@@ -25,15 +25,26 @@ function postUrl(post) {
   return tecnewsPostUrl(post);
 }
 
-function byline(post) {
-  return `${escapeHtml(post.author)} · ${escapeHtml(post.date)}`;
-}
-
 function paragraphsFor(post) {
   return String(post.body || post.summary)
     .split(/\n{2,}/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
+}
+
+function readingTimeFor(post, paragraphs) {
+  const words = [post.title, post.summary, ...paragraphs].join(" ").trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 210));
+}
+
+function updateMeta(name, content, attribute = "name") {
+  let tag = document.querySelector(`meta[${attribute}="${name}"]`);
+  if (!tag) {
+    tag = document.createElement("meta");
+    tag.setAttribute(attribute, name);
+    document.head.append(tag);
+  }
+  tag.setAttribute("content", content);
 }
 
 function renderSearchResults(posts, query) {
@@ -81,6 +92,12 @@ function setupSearch(posts) {
   });
 }
 
+async function copyCurrentUrl(button) {
+  await navigator.clipboard?.writeText(window.location.href);
+  const label = button.querySelector("span");
+  if (label) label.textContent = "Copiado";
+}
+
 async function renderArticle() {
   const root = document.querySelector("[data-article-root]");
   const content = await tecnewsLoadContentAsync();
@@ -89,39 +106,62 @@ async function renderArticle() {
   const post = posts.find((item) => item.id === params.get("id")) || posts[0];
 
   if (!post) {
-    root.innerHTML = `<section class="article-shell"><h1>Artigo indisponível</h1><p>Volta à homepage para veres as últimas notícias.</p></section>`;
+    root.innerHTML = `<section class="article-shell"><h1>Artigo indisponivel</h1><p>Volta a homepage para veres as ultimas noticias.</p></section>`;
     return;
   }
 
   document.title = `${post.title} - Tecnews.pt`;
   document.querySelector('meta[name="description"]')?.setAttribute("content", post.summary);
+  updateMeta("og:title", `${post.title} - Tecnews.pt`, "property");
+  updateMeta("og:description", post.summary, "property");
+  updateMeta("og:image", post.image, "property");
+  updateMeta("twitter:card", "summary_large_image");
   tecnewsTrackPage("article");
   tecnewsTrackClick("article-view", post.id);
 
-  const related = posts.filter((item) => item.id !== post.id).slice(0, 3);
+  const postIndex = posts.findIndex((item) => item.id === post.id);
+  const articleParagraphs = paragraphsFor(post);
+  const readingTime = readingTimeFor(post, articleParagraphs);
+  const related = posts
+    .filter((item) => item.id !== post.id && item.category === post.category)
+    .concat(posts.filter((item) => item.id !== post.id && item.category !== post.category))
+    .slice(0, 3);
+  const nextPost = posts[(postIndex + 1) % posts.length];
 
-  root.innerHTML = `<article class="article-shell">
-    <a class="back-link" href="index.html">Voltar ao início</a>
+  root.innerHTML = `<article class="article-shell article-premium">
+    <a class="back-link" href="index.html"><i data-lucide="arrow-left"></i>Voltar ao inicio</a>
     <header class="article-header">
-      <span class="tag tag-blue">${escapeHtml(post.category)}</span>
+      <div class="article-kicker">
+        <span class="tag tag-blue">${escapeHtml(post.category)}</span>
+        <span>${readingTime} min de leitura</span>
+      </div>
       <h1>${escapeHtml(post.title)}</h1>
       <p>${escapeHtml(post.summary)}</p>
-      <span class="byline">${byline(post)}</span>
+      <div class="article-meta">
+        <span class="author-mark">${escapeHtml(post.author.slice(0, 1))}</span>
+        <span><strong>${escapeHtml(post.author)}</strong><small>${escapeHtml(post.date)}</small></span>
+      </div>
     </header>
     <figure class="article-figure">
       <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" />
+      ${post.imageAlt ? `<figcaption>${escapeHtml(post.imageAlt)}</figcaption>` : ""}
     </figure>
-    <div class="article-body">
-      ${paragraphsFor(post)
-        .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
-        .join("")}
+    <div class="article-reading-layout">
+      <aside class="article-tools" aria-label="Ferramentas do artigo">
+        <button type="button" data-share-article><i data-lucide="share-2"></i><span>Partilhar</span></button>
+        <button type="button" data-copy-link><i data-lucide="link"></i><span>Copiar link</span></button>
+      </aside>
+      <div class="article-body">
+        ${articleParagraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+      </div>
     </div>
     <aside class="related-posts">
       <h2>Continuar a ler</h2>
       <div>
         ${related
           .map(
-            (item) => `<a href="${postUrl(item)}">
+            (item) => `<a class="related-card" href="${postUrl(item)}">
+              <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.imageAlt || item.title)}" />
               <span>${escapeHtml(item.category)}</span>
               <strong>${escapeHtml(item.title)}</strong>
             </a>`,
@@ -129,13 +169,26 @@ async function renderArticle() {
           .join("")}
       </div>
     </aside>
+    ${
+      nextPost && nextPost.id !== post.id
+        ? `<a class="next-article" href="${postUrl(nextPost)}">
+            <span>Proximo artigo</span>
+            <strong>${escapeHtml(nextPost.title)}</strong>
+          </a>`
+        : ""
+    }
   </article>`;
 
   setupSearch(posts);
+  document.querySelector("[data-copy-link]")?.addEventListener("click", (event) => copyCurrentUrl(event.currentTarget));
+  document.querySelector("[data-share-article]")?.addEventListener("click", async (event) => {
+    if (navigator.share) {
+      await navigator.share({ title: post.title, text: post.summary, url: window.location.href });
+    } else {
+      await copyCurrentUrl(event.currentTarget);
+    }
+  });
+  window.lucide?.createIcons();
 }
 
 renderArticle();
-
-if (window.lucide) {
-  window.lucide.createIcons();
-}
