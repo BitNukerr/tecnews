@@ -1,38 +1,39 @@
 # Tecnews.pt
 
-Primeira versão estática do site Tecnews.pt, inspirada no ritmo editorial de portais portugueses de tecnologia: manchete principal, categorias, notícias recentes, reviews, promoções, guias, newsletter e painel admin.
+Site editorial estatico para tecnologia em Portugal, com homepage, artigos, topicos, admin e integracao opcional com Supabase.
 
-## Como ver localmente
+## Local
 
-Abre `index.html` diretamente no navegador.
+Abre `index.html` diretamente no browser.
 
 ## Admin
 
-Abre `admin.html` para gerir a demo:
+Abre `admin.html`.
 
-- Criar, editar, publicar e apagar posts.
-- Escolher a manchete principal.
-- Atualizar o título da homepage, newsletter e temas em destaque.
-- Ver analítica simples com visitas, cliques em posts e subscrições.
+Sem Supabase configurado, o admin usa o modo demo com a password `tecnews2026` e guarda conteudo no `localStorage`.
 
-Password da demo: `tecnews2026`.
+Com Supabase configurado, o admin usa email/password do Supabase Auth e guarda posts/configuracoes na base de dados.
 
-Nesta fase os dados ficam guardados no `localStorage` do navegador e o login é uma proteção visual de protótipo. Isto é ótimo para testar o fluxo, mas para um site real com login seguro, vários dispositivos e conteúdo persistente vais precisar de um backend/CMS, por exemplo WordPress, Strapi, Directus, Sanity, Supabase ou Firebase.
+## Supabase
 
-## Publicar no GitHub Pages
+1. Cria um projeto em Supabase.
+2. Abre o SQL Editor e executa `supabase-schema.sql`.
+3. Em Authentication, cria o utilizador admin por email/password.
+4. Em Project Settings -> API, copia o Project URL e a anon/public key.
+5. Cola os valores em `config.js`:
 
-1. Cria um repositório novo no GitHub chamado `tecnews.pt`.
-2. Envia estes ficheiros para o repositório.
-3. No GitHub, abre `Settings` -> `Pages`.
-4. Em `Build and deployment`, escolhe `Deploy from a branch`.
-5. Seleciona a branch principal e a pasta `/root`.
-6. Quando tiveres o domínio pronto, adiciona `tecnews.pt` em `Custom domain`.
+```js
+window.TECNEWS_SUPABASE_URL = "https://PROJECT.supabase.co";
+window.TECNEWS_SUPABASE_ANON_KEY = "PUBLIC_ANON_KEY";
+```
 
-## Ligar o domínio
+Nunca coloques a service role key no browser.
 
-No painel onde compraste o domínio, aponta os DNS para o serviço de alojamento que escolheres. Para GitHub Pages, normalmente vais precisar de:
+## Vercel e dominio
 
-- Registos `A` para os IPs do GitHub Pages.
-- Registo `CNAME` para `www` apontar para o teu endereço GitHub Pages.
+O projeto esta ligado ao Vercel e os dominios `tecnews.pt` e `www.tecnews.pt` foram adicionados ao projeto. O Vercel indicou estes DNS no momento da configuracao:
 
-Confirma sempre os valores atuais na documentação do GitHub antes de alterar DNS.
+- `A tecnews.pt 76.76.21.21`
+- `A www.tecnews.pt 76.76.21.21`
+
+Alternativa: trocar nameservers para `ns1.vercel-dns.com` e `ns2.vercel-dns.com`. Depois confirma o dominio em Vercel.

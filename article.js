@@ -30,12 +30,10 @@ function byline(post) {
 }
 
 function paragraphsFor(post) {
-  return [
-    post.summary,
-    `A ${post.category.toLowerCase()} continua a acelerar e a mudar decisões de compra, hábitos de trabalho e a forma como usamos serviços digitais todos os dias.`,
-    "Neste guia rápido, a Tecnews junta o essencial: o que mudou, porque interessa e o que deves confirmar antes de tomar uma decisão.",
-    "A recomendação é simples: compara preços, confirma garantias, lê as condições e escolhe tecnologia que resolva uma necessidade real, não apenas a novidade do momento.",
-  ];
+  return String(post.body || post.summary)
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
 }
 
 function renderSearchResults(posts, query) {
@@ -83,9 +81,9 @@ function setupSearch(posts) {
   });
 }
 
-function renderArticle() {
+async function renderArticle() {
   const root = document.querySelector("[data-article-root]");
-  const content = tecnewsLoadContent();
+  const content = await tecnewsLoadContentAsync();
   const posts = content.posts.filter((post) => post.published);
   const params = new URLSearchParams(window.location.search);
   const post = posts.find((item) => item.id === params.get("id")) || posts[0];

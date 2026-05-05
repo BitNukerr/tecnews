@@ -78,8 +78,8 @@ function attachCardNavigation() {
   });
 }
 
-function renderTopic() {
-  const content = tecnewsLoadContent();
+async function renderTopic() {
+  const content = await tecnewsLoadContentAsync();
   const posts = content.posts.filter((post) => post.published);
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("topic") || "guias";

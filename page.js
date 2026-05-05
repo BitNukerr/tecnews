@@ -30,8 +30,8 @@ const pages = {
     title: "Privacidade",
     eyebrow: "Política",
     body: [
-      "Esta versão inicial usa apenas armazenamento local do navegador para guardar preferências, posts da demo e métricas simples.",
-      "Numa versão final com backend, a política será atualizada com detalhes sobre cookies, analytics, newsletter e direitos dos utilizadores.",
+      "A Tecnews.pt pode usar Supabase para guardar posts, sessões de administração e configurações editoriais.",
+      "A política final deve ser revista antes do lançamento público com detalhes sobre cookies, analytics, newsletter e direitos dos utilizadores.",
     ],
   },
 };

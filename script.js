@@ -133,8 +133,8 @@ function setupSearch(posts) {
   });
 }
 
-function renderHome() {
-  const content = tecnewsLoadContent();
+async function renderHome() {
+  const content = await tecnewsLoadContentAsync();
   const posts = content.posts.filter((post) => post.published);
   const heroPosts = posts.filter((post) => post.section === "hero");
   const leadPost = posts.find((post) => post.featured) || heroPosts[0] || posts[0];

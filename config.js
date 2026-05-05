@@ -1,0 +1,2 @@
+window.TECNEWS_SUPABASE_URL = "";
+window.TECNEWS_SUPABASE_ANON_KEY = "";

@@ -187,6 +187,37 @@ function tecnewsClone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function tecnewsBodyForPost(post) {
+  if (post.body) return post.body;
+  return [
+    post.summary,
+    `A categoria ${post.category} continua a mudar a forma como compramos, trabalhamos e usamos tecnologia todos os dias.`,
+    "A Tecnews acompanha o essencial, explica o que mudou e junta os pontos que deves confirmar antes de tomar uma decisao.",
+    "Compara preco, garantia, suporte e utilidade real antes de escolher. A melhor novidade e a que resolve um problema concreto.",
+  ].join("\n\n");
+}
+
+function tecnewsNormalizePost(post, index = 0) {
+  return {
+    score: "",
+    store: "",
+    price: "",
+    oldPrice: "",
+    featured: false,
+    published: true,
+    sortOrder: index * 10,
+    ...post,
+    body: tecnewsBodyForPost(post),
+  };
+}
+
+function tecnewsNormalizeContent(content) {
+  return {
+    settings: { ...tecnewsDefaultContent.settings, ...(content.settings || {}) },
+    posts: Array.isArray(content.posts) ? content.posts.map(tecnewsNormalizePost) : tecnewsDefaultContent.posts.map(tecnewsNormalizePost),
+  };
+}
+
 function tecnewsGetStorageItem(key) {
   try {
     return localStorage.getItem(key);
@@ -215,17 +246,14 @@ function tecnewsLoadContent() {
   const saved = tecnewsGetStorageItem(TECNEWS_STORAGE_KEY);
 
   if (!saved) {
-    return tecnewsClone(tecnewsDefaultContent);
+    return tecnewsNormalizeContent(tecnewsClone(tecnewsDefaultContent));
   }
 
   try {
     const parsed = JSON.parse(saved);
-    return {
-      settings: { ...tecnewsDefaultContent.settings, ...(parsed.settings || {}) },
-      posts: Array.isArray(parsed.posts) ? parsed.posts : tecnewsDefaultContent.posts,
-    };
+    return tecnewsNormalizeContent(parsed);
   } catch {
-    return tecnewsClone(tecnewsDefaultContent);
+    return tecnewsNormalizeContent(tecnewsClone(tecnewsDefaultContent));
   }
 }
 

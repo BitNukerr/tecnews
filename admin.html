@@ -16,6 +16,10 @@
         <h1>Admin Tecnews</h1>
         <p class="login-copy">Área privada para gerir posts, homepage e métricas editoriais.</p>
         <label>
+          Email
+          <input name="email" type="email" autocomplete="username" placeholder="admin@tecnews.pt" />
+        </label>
+        <label>
           Password
           <input name="password" type="password" autocomplete="current-password" required placeholder="Password admin" />
         </label>
@@ -114,6 +118,11 @@
               <label>
                 Resumo
                 <textarea name="summary" required rows="4" maxlength="220" placeholder="Resumo curto para a homepage"></textarea>
+              </label>
+
+              <label>
+                Corpo do artigo
+                <textarea name="body" required rows="12" placeholder="Escreve o artigo completo. Usa uma linha em branco entre parágrafos."></textarea>
               </label>
 
               <label>
@@ -242,7 +251,10 @@
       </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="site-data.js"></script>
+    <script src="tecnews-backend.js"></script>
     <script src="admin.js"></script>
   </body>
 </html>

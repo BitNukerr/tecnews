@@ -1,4 +1,4 @@
-const content = tecnewsLoadContent();
+let content = tecnewsLoadContent();
 const ADMIN_PASSWORD = "tecnews2026";
 const ADMIN_SESSION_KEY = "tecnews-admin-session-v1";
 const postForm = document.querySelector("[data-post-form]");
@@ -54,6 +54,7 @@ function fillPostForm(post) {
   postForm.elements.id.value = post.id;
   postForm.elements.title.value = post.title;
   postForm.elements.summary.value = post.summary;
+  postForm.elements.body.value = post.body || "";
   postForm.elements.category.value = post.category;
   postForm.elements.author.value = post.author;
   postForm.elements.date.value = post.date;
@@ -77,6 +78,7 @@ function readPostForm() {
     id: existingId || `post-${Date.now()}-${tecnewsSlugFromTitle(title)}`,
     title,
     summary: postForm.elements.summary.value.trim(),
+    body: postForm.elements.body.value.trim(),
     category: postForm.elements.category.value.trim(),
     author: postForm.elements.author.value.trim(),
     date: postForm.elements.date.value.trim(),
@@ -89,11 +91,15 @@ function readPostForm() {
     oldPrice: postForm.elements.oldPrice.value.trim(),
     featured: postForm.elements.featured.checked,
     published: postForm.elements.published.checked,
+    sortOrder: content.posts.find((post) => post.id === existingId)?.sortOrder,
   };
 }
 
+async function refreshContent() {
+  content = await tecnewsLoadContentAsync({ includeDrafts: true });
+}
+
 function saveContent() {
-  tecnewsSaveContent(content);
   renderAdmin();
 }
 
@@ -292,7 +298,7 @@ function renderAdmin() {
   renderAnalytics();
 }
 
-postForm.addEventListener("submit", (event) => {
+postForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const post = readPostForm();
 
@@ -310,11 +316,19 @@ postForm.addEventListener("submit", (event) => {
     currentPostPage = 1;
   }
 
-  saveContent();
+  try {
+    await tecnewsSavePostAsync(post, { clearFeatured: post.featured });
+    await refreshContent();
+    saveContent();
+  } catch (error) {
+    alert(`Nao foi possivel guardar o post: ${error.message}`);
+    return;
+  }
+
   fillPostForm(post);
 });
 
-settingsForm.addEventListener("submit", (event) => {
+settingsForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   content.settings.newsletterTitle = settingsForm.elements.newsletterTitle.value.trim();
   content.settings.newsletterText = settingsForm.elements.newsletterText.value.trim();
@@ -324,7 +338,14 @@ settingsForm.addEventListener("submit", (event) => {
     .map((trend) => trend.trim())
     .filter(Boolean)
     .slice(0, 8);
-  saveContent();
+
+  try {
+    await tecnewsSaveSettingsAsync(content.settings);
+    await refreshContent();
+    saveContent();
+  } catch (error) {
+    alert(`Nao foi possivel guardar a homepage: ${error.message}`);
+  }
 });
 
 document.querySelector("[data-new-post]").addEventListener("click", () => {
@@ -332,14 +353,19 @@ document.querySelector("[data-new-post]").addEventListener("click", () => {
   showAdminView("editor");
 });
 
-document.querySelector("[data-delete-post]").addEventListener("click", () => {
+document.querySelector("[data-delete-post]").addEventListener("click", async () => {
   const id = postForm.elements.id.value;
   if (!id) return;
   const index = content.posts.findIndex((post) => post.id === id);
   if (index >= 0) {
-    content.posts.splice(index, 1);
-    saveContent();
-    fillPostForm(blankPost());
+    try {
+      await tecnewsDeletePostAsync(id);
+      content.posts.splice(index, 1);
+      saveContent();
+      fillPostForm(blankPost());
+    } catch (error) {
+      alert(`Nao foi possivel apagar o post: ${error.message}`);
+    }
   }
 });
 
@@ -351,7 +377,7 @@ document.querySelector("[data-reset-demo]").addEventListener("click", () => {
 
 document.querySelector("[data-logout]").addEventListener("click", () => {
   sessionStorage.removeItem(ADMIN_SESSION_KEY);
-  window.location.reload();
+  tecnewsSignOutAdmin().finally(() => window.location.reload());
 });
 
 document.querySelectorAll("[data-admin-view-link]").forEach((link) => {
@@ -361,18 +387,32 @@ document.querySelectorAll("[data-admin-view-link]").forEach((link) => {
   });
 });
 
-function unlockAdmin() {
+async function unlockAdmin() {
   loginScreen.classList.add("is-hidden");
   adminApp.classList.remove("is-locked");
   tecnewsTrackPage("admin");
+  await refreshContent();
   fillPostForm(blankPost());
   renderAdmin();
   showAdminView((window.location.hash || "#overview").replace("#", "") || "overview");
 }
 
-loginForm.addEventListener("submit", (event) => {
+loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const email = loginForm.elements.email.value.trim();
   const password = loginForm.elements.password.value;
+
+  if (tecnewsHasSupabaseConfig()) {
+    try {
+      await tecnewsSignInAdmin(email, password);
+      sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+      await unlockAdmin();
+      return;
+    } catch (error) {
+      document.querySelector("[data-login-error]").textContent = error.message || "Login invalido.";
+      return;
+    }
+  }
 
   if (password === ADMIN_PASSWORD) {
     sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
@@ -383,6 +423,8 @@ loginForm.addEventListener("submit", (event) => {
   document.querySelector("[data-login-error]").textContent = "Password incorreta.";
 });
 
-if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true") {
-  unlockAdmin();
-}
+tecnewsGetAdminSession().then((session) => {
+  if (session || (!tecnewsHasSupabaseConfig() && sessionStorage.getItem(ADMIN_SESSION_KEY) === "true")) {
+    unlockAdmin();
+  }
+});
